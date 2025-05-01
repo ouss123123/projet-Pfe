@@ -15,15 +15,12 @@ const Login = () => {
       setError(false);
 
       try {
-        const res1 = await axiosInstance.post("/login", {
+        const res = await axiosInstance.post("/login", {
           email,
           password,
         });
 
-        sessionStorage.setItem("token", res1.data.token);
-        localStorage.setItem("user", res1.data.user.name);
-        localStorage.setItem("userId", res1.data.user.id);
-        localStorage.setItem("profilePicture", res1.data.user.profile_picture);
+        sessionStorage.setItem("token", res.data.token);
 
         navigate("/");
       } catch (err) {

@@ -23,17 +23,20 @@ const SignUp = () => {
         });
     },
     navigate = useNavigate(),
-    handleSignup = (e) => {
+    handleSignup = async (e) => {
       e.preventDefault();
       try {
-        axiosInstance.post("/register", {
-          name: signUp.name,
-          email: signUp.email,
-          phone: signUp.phone,
-          password: signUp.password,
-          profile_picture: signUp.profile_picture,
-        });
-        
+        axiosInstance
+          .post("/users", {
+            name: signUp.name,
+            email: signUp.email,
+            phone: signUp.phone,
+            password: signUp.password,
+            avatar: signUp.profile_picture,
+          })
+          .then((res) => {
+            console.log(res);
+          });
       } catch (a) {
         console.log(a);
       }
