@@ -6,6 +6,6 @@ const mvpVoteSchema = new mongoose.Schema({
   votedFor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
-const MVP = mongoose.model("MVP", mvpVoteSchema);
+const MvpVote = mongoose.model('MvpVote', mvpVoteSchema);
 
-module.exports = MVP;
+module.exports = MvpVote;
