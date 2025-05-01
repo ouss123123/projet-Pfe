@@ -137,5 +137,6 @@
     "Reset Password": "إعادة تعيين كلمة المرور",
     "New Password:": "كلمة المرور الجديدة:",
     "Confirm Password:": "تأكيد كلمة المرور:",
-    "Resetting...": "جارٍ إعادة التعيين..."
+    "Resetting...": "جارٍ إعادة التعيين...",
+    "Welcome back! Please enter your details" : "مرحبًا بعودتك! يرجى إدخال بياناتك."
   }

@@ -41,97 +41,100 @@ const SignUp = () => {
         console.log(a);
       }
     };
+
   return (
-    <div className="flex items-center justify-center min-h-screen m-5">
-      <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded-lg shadow-2xl">
-        <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
-          {t("Sign Up")}
-        </h1>
-        <form onSubmit={handleSignup} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Full Name")}
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              placeholder={t("Enter your full name")}
-              onChange={(e) => setSignUp({ ...signUp, name: e.target.value })}
-            />
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-lg w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl transform transition-all hover:scale-[1.01]">
+        <div className="text-center space-y-3">
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+            {t("Sign Up")}
+          </h1>
+          <p className="text-lg text-gray-600">
+            {t("Create your account and start exploring")}
+          </p>
+        </div>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Email Address")}
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              placeholder={t("Enter your email")}
-              onChange={(e) => setSignUp({ ...signUp, email: e.target.value })}
-            />
-          </div>
+        <form onSubmit={handleSignup} className="mt-8 space-y-6">
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                {t("Full Name")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  id="name"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Enter your full name")}
+                  onChange={(e) => setSignUp({ ...signUp, name: e.target.value })}
+                />
+              </div>
+            </div>
 
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Phone Number")}
-            </label>
-            <input
-              type="text"
-              id="phone"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              placeholder={t("Enter your phone number")}
-              onChange={(e) => setSignUp({ ...signUp, phone: e.target.value })}
-            />
-          </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t("Email Address")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="email"
+                  id="email"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Enter your email")}
+                  onChange={(e) => setSignUp({ ...signUp, email: e.target.value })}
+                />
+              </div>
+            </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Password")}
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              placeholder={t("Create a password")}
-              onChange={(e) =>
-                setSignUp({ ...signUp, password: e.target.value })
-              }
-            />
-          </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                {t("Phone Number")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="tel"
+                  id="phone"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Enter your phone number")}
+                  onChange={(e) => setSignUp({ ...signUp, phone: e.target.value })}
+                />
+              </div>
+            </div>
 
-          <div>
-            <label
-              htmlFor="profile_picture"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Profile Picture")}
-            </label>
-            <input
-              type="file"
-              id="profile_picture"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              onChange={handleImageInput}
-            />
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t("Password")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="password"
+                  id="password"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Create a password")}
+                  onChange={(e) => setSignUp({ ...signUp, password: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="profile_picture" className="block text-sm font-medium text-gray-700">
+                {t("Profile Picture")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="file"
+                  id="profile_picture"
+                  accept="image/*"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  onChange={handleImageInput}
+                />
+              </div>
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full px-4 py-3 font-medium text-white bg-indigo-600 rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all hover:scale-[1.02]"
           >
             {t("Sign Up")}
           </button>

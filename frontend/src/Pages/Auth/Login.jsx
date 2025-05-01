@@ -28,76 +28,80 @@ const Login = () => {
         setError(true);
       }
     };
+
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
-          {t("Login")}
-        </h1>
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Email Address")}
-            </label>
-            <input
-              type="text"
-              id="email"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-              placeholder={t("Enter your email")}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl transform transition-all hover:scale-[1.01]">
+        <div>
+          <h1 className="text-4xl font-extrabold text-center text-gray-900 tracking-tight">
+            {t("Login")}
+          </h1>
+          <p className="mt-3 text-center text-gray-600 text-lg">
+            {t("Welcome back! Please enter your details")}
+          </p>
+        </div>
+
+        <form onSubmit={handleLogin} className="mt-8 space-y-6">
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t("Email Address")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="email"
+                  id="email"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Enter your email")}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t("Password")}
+              </label>
+              <div className="mt-1">
+                <input
+                  type="password"
+                  id="password"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  placeholder={t("Enter your password")}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {t("Password")}
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-4 py-3 mt-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-              placeholder={t("Enter your password")}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+          {error && (
+            <div className="bg-red-50 text-red-500 text-center py-3 rounded-lg">
+              {t("Invalid email or password")}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="w-full px-4 py-3 font-medium text-white bg-indigo-600 rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition transform hover:scale-105"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all hover:scale-[1.02]"
           >
             {t("Login")}
           </button>
-        </form>
 
-        {error && (
-          <div className="text-red-500 text-center mt-4">
-            {t("Invalid email or password")}
-          </div>
-        )}
-        <div className="">
-          <div className="text-center mt-4">
+          <div className="flex flex-col space-y-4 text-center">
             <Link
               to="/sign-up"
-              className="text-indigo-600 hover:text-indigo-800 transition"
+              className="text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
             >
               {t("Don't have an account? Sign Up")}
             </Link>
-          </div>
-          <div className="text-center mt-4">
             <Link
               to="/forgot-password"
-              className="text-indigo-600 hover:text-indigo-800 transition"
+              className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               {t("Forgot Password?")}
             </Link>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
