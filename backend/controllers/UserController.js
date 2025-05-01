@@ -1,4 +1,4 @@
-const userModel = require("../models/users.js");
+const userModel = require("../models/User.js");
 const fs = require("fs");
 require("dotenv").config();
 const path = require("path");
