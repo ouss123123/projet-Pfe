@@ -3,27 +3,12 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcrypt");
-const multer = require("multer");
 const generateJWT = require("../utils/generateJWT.js");
 
 const uploadFolderPath = path.join(__dirname, "../uploads/usersImages");
 if (!fs.existsSync(uploadFolderPath)) {
   fs.mkdirSync(uploadFolderPath);
 }
-
-const diskStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadFolderPath);
-  },
-  filename: function (req, file, cb) {
-    const ext = "webp";
-    const name = file.originalname.split(".")[0];
-    const newFileName = `${name}-${Date.now()}.${ext}`;
-    cb(null, newFileName);
-  },
-});
-
-const upload = multer({ storage: diskStorage });
 
 const getUsers = async (req, res) => {
   try {
@@ -123,5 +108,4 @@ module.exports = {
   SignUp,
   Login,
   getUserById,
-  upload,
 };
