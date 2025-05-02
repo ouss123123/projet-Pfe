@@ -63,8 +63,17 @@ const Login = async (req, res) => {
 
 const SignUp = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
-    const avatar = req.file ? path.join("uploads", req.file.filename) : null;
+    const { name, email, phone, password, avatar } = req.body;
+
+    let profile_picture = null;
+    if (avatar) {
+      const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
+      const fileType = avatar.split(";")[0].split("/")[1];
+      const fileName = `profile-${Date.now()}.${fileType}`;
+      const filePath = path.join(uploadFolderPath, fileName);
+      fs.writeFileSync(filePath, base64Data, { encoding: "base64" });
+      profile_picture = path.join("uploads", fileName);
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -73,7 +82,7 @@ const SignUp = async (req, res) => {
       email,
       phone,
       password: hashedPassword,
-      profile_picture: avatar,
+      profile_picture,
     });
 
     const token = await generateJWT({ id: newUser._id, email: newUser.email });
