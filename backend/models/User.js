@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   phone: String,
-  password: String,
+  password: { type: String, select: false },
   profile_picture: String,
   role: { type: String, enum: ["player", "admin"], default: "player" },
   token: {

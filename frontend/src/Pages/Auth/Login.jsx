@@ -20,6 +20,9 @@ const Login = () => {
           password,
         });
 
+        console.log(res.data);
+        
+
         sessionStorage.setItem("token", res.data.token);
 
         navigate("/");
