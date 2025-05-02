@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const connectDB = require("./connection/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
+const matchRoutes = require("./routes/matchRoute.js");
 
 const app = express();
 
@@ -22,7 +23,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 connectDB();
 
 try {
-  app.use("/", userRoutes);
+  app.use("/users", userRoutes);
+  app.use("/matches", matchRoutes);
 } catch (error) {
   console.error("Error in server setup:", error);
   process.exit(1);

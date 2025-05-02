@@ -1,14 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const matchSchema = new mongoose.Schema(
   {
     title: String,
     location: {
-      name: String,
-      coordinates: {
-        lat: Number,
-        lng: Number,
-      },
+      type: String,
     },
     date: Date,
     time: String,
@@ -17,11 +13,8 @@ const matchSchema = new mongoose.Schema(
     players: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        confirmed: { type: Boolean, default: false },
       },
     ],
-    waitingList: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    isCanceled: { type: Boolean, default: false },
   },
   {
     timestamps: true,
