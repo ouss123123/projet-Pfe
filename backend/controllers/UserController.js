@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 const generateJWT = require("../utils/generateJWT.js");
 
-const uploadFolderPath = path.join(__dirname, "../uploads");
+const uploadFolderPath = path.join(__dirname, "../uploads/usersImages");
 if (!fs.existsSync(uploadFolderPath)) {
   fs.mkdirSync(uploadFolderPath);
 }
@@ -71,6 +71,7 @@ const SignUp = async (req, res) => {
       const fileType = avatar.split(";")[0].split("/")[1];
       const fileName = `profile-${Date.now()}.${fileType}`;
       const filePath = path.join(uploadFolderPath, fileName);
+
       fs.writeFileSync(filePath, base64Data, { encoding: "base64" });
       profile_picture = path.join("uploads", fileName);
     }
