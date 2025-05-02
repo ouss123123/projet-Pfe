@@ -16,7 +16,7 @@ const diskStorage = multer.diskStorage({
     cb(null, uploadFolderPath);
   },
   filename: function (req, file, cb) {
-    const ext = file.mimetype.split("/")[1];
+    const ext = "webp";
     const name = file.originalname.split(".")[0];
     const newFileName = `${name}-${Date.now()}.${ext}`;
     cb(null, newFileName);
@@ -68,7 +68,7 @@ const SignUp = async (req, res) => {
     let profile_picture = null;
     if (avatar) {
       const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
-      const fileType = avatar.split(";")[0].split("/")[1];
+      const fileType = "webp";
       const fileName = `profile-${Date.now()}.${fileType}`;
       const filePath = path.join(uploadFolderPath, fileName);
 
