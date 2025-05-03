@@ -12,10 +12,28 @@ if (!fs.existsSync(uploadFolderPath)) {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await userModel.find();
+    const limit = req.query.limit || 10;
+    const page = req.query.page || 1;
+    const skip = page >= 1 && (page - 1) * limit;
+    const users = await userModel
+      .find({}, { password: false, __v: false, token: false })
+      .limit(limit)
+      .skip(skip);
     res.status(200).json({
       message: "users fetched successfully",
       data: users,
+      nextPage:
+        users.length > 0 && page > 0
+          ? `https://localhost:5000/users?limit=1&page=${
+              page <= 1 ? 2 : parseInt(page) + 1
+            }`
+          : null,
+      prevPage:
+        users.length > 0 && page > 0
+          ? `https://localhost:5000/users?limit=1&page=${
+              page > 1 ? parseInt(page) - 1 : 1
+            }`
+          : null,
     });
   } catch (error) {
     console.error(error);
