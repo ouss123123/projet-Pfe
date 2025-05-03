@@ -34,8 +34,8 @@ const SignUp = () => {
             password: signUp.password,
             avatar: signUp.profile_picture,
           })
-          .then((res) => {
-            console.log(res);
+          .then(() => {
+            navigate("/login");
           });
       } catch (a) {
         console.log(a);
@@ -57,7 +57,10 @@ const SignUp = () => {
         <form onSubmit={handleSignup} className="mt-8 space-y-6">
           <div className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 {t("Full Name")}
               </label>
               <div className="mt-1">
@@ -66,13 +69,18 @@ const SignUp = () => {
                   id="name"
                   className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   placeholder={t("Enter your full name")}
-                  onChange={(e) => setSignUp({ ...signUp, name: e.target.value })}
+                  onChange={(e) =>
+                    setSignUp({ ...signUp, name: e.target.value })
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 {t("Email Address")}
               </label>
               <div className="mt-1">
@@ -81,13 +89,18 @@ const SignUp = () => {
                   id="email"
                   className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   placeholder={t("Enter your email")}
-                  onChange={(e) => setSignUp({ ...signUp, email: e.target.value })}
+                  onChange={(e) =>
+                    setSignUp({ ...signUp, email: e.target.value })
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
                 {t("Phone Number")}
               </label>
               <div className="mt-1">
@@ -96,13 +109,18 @@ const SignUp = () => {
                   id="phone"
                   className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   placeholder={t("Enter your phone number")}
-                  onChange={(e) => setSignUp({ ...signUp, phone: e.target.value })}
+                  onChange={(e) =>
+                    setSignUp({ ...signUp, phone: e.target.value })
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 {t("Password")}
               </label>
               <div className="mt-1">
@@ -111,13 +129,18 @@ const SignUp = () => {
                   id="password"
                   className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   placeholder={t("Create a password")}
-                  onChange={(e) => setSignUp({ ...signUp, password: e.target.value })}
+                  onChange={(e) =>
+                    setSignUp({ ...signUp, password: e.target.value })
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="profile_picture" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="profile_picture"
+                className="block text-sm font-medium text-gray-700"
+              >
                 {t("Profile Picture")}
               </label>
               <div className="mt-1">

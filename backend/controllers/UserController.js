@@ -1,36 +1,39 @@
-const userModel = require("../models/users.js");
+const userModel = require("../models/User.js");
 const fs = require("fs");
 require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcrypt");
-const multer = require("multer");
 const generateJWT = require("../utils/generateJWT.js");
 
-const uploadFolderPath = path.join(__dirname, "../uploads");
+const uploadFolderPath = path.join(__dirname, "../uploads/usersImages");
 if (!fs.existsSync(uploadFolderPath)) {
   fs.mkdirSync(uploadFolderPath);
 }
 
-const diskStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadFolderPath);
-  },
-  filename: function (req, file, cb) {
-    const ext = file.mimetype.split("/")[1];
-    const name = file.originalname.split(".")[0];
-    const newFileName = `${name}-${Date.now()}.${ext}`;
-    cb(null, newFileName);
-  },
-});
-
-const upload = multer({ storage: diskStorage });
-
 const getUsers = async (req, res) => {
   try {
-    const users = await userModel.find();
+    const limit = req.query.limit || 10;
+    const page = req.query.page || 1;
+    const skip = page >= 1 && (page - 1) * limit;
+    const users = await userModel
+      .find({}, { password: false, __v: false, token: false })
+      .limit(limit)
+      .skip(skip);
     res.status(200).json({
       message: "users fetched successfully",
       data: users,
+      nextPage:
+        users.length > 0 && page > 0
+          ? `https://localhost:5000/users?limit=1&page=${
+              page <= 1 ? 2 : parseInt(page) + 1
+            }`
+          : null,
+      prevPage:
+        users.length > 0 && page > 0
+          ? `https://localhost:5000/users?limit=1&page=${
+              page > 1 ? parseInt(page) - 1 : 1
+            }`
+          : null,
     });
   } catch (error) {
     console.error(error);
@@ -63,8 +66,18 @@ const Login = async (req, res) => {
 
 const SignUp = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
-    const avatar = req.file ? path.join("uploads", req.file.filename) : null;
+    const { name, email, phone, password, avatar } = req.body;
+
+    let profile_picture = null;
+    if (avatar) {
+      const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
+      const fileType = "webp";
+      const fileName = `profile-${Date.now()}.${fileType}`;
+      const filePath = path.join(uploadFolderPath, fileName);
+
+      fs.writeFileSync(filePath, base64Data, { encoding: "base64" });
+      profile_picture = path.join("uploads", fileName);
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -73,7 +86,7 @@ const SignUp = async (req, res) => {
       email,
       phone,
       password: hashedPassword,
-      profile_picture: avatar,
+      profile_picture,
     });
 
     const token = await generateJWT({ id: newUser._id, email: newUser.email });
@@ -113,5 +126,4 @@ module.exports = {
   SignUp,
   Login,
   getUserById,
-  upload,
 };

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const connectDB = require("./connection/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
+const matchRoutes = require("./routes/matchRoute.js");
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(cors());
 
 const server = http.createServer(app);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
@@ -22,7 +23,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 connectDB();
 
 try {
-  app.use("/", userRoutes);
+  app.use("/users", userRoutes);
+  app.use("/matches", matchRoutes);
 } catch (error) {
   console.error("Error in server setup:", error);
   process.exit(1);
