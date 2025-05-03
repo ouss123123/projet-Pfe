@@ -1,8 +1,10 @@
 import React from 'react'
+import Navbar from '../../Components/Navbar/Navbar'
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar/>
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20 px-4">
         <div className="container mx-auto text-center">

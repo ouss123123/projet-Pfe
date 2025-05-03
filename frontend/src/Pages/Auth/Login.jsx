@@ -89,7 +89,7 @@ const Login = () => {
 
           <div className="flex flex-col space-y-4 text-center">
             <Link
-              to="/sign-up"
+              to="/signup"
               className="text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
             >
               {t("Don't have an account? Sign Up")}
