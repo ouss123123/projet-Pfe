@@ -1,0 +1,27 @@
+const mongoose = require("mongoose");
+
+const matchSchema = new mongoose.Schema(
+  {
+    title: String,
+    location: {
+      type: String,
+    },
+    date: Date,
+    time: String,
+    maxPlayers: Number,
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    players: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
+    isCanceled: { type: Boolean, default: false },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Match = mongoose.model("Match", matchSchema);
+
+module.exports = Match;
