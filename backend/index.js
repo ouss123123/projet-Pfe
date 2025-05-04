@@ -19,12 +19,18 @@ app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static("public"));
 
 connectDB();
 
 try {
   app.use("/users", userRoutes);
   app.use("/matches", matchRoutes);
+  app.use((err, req, res, next) => {
+    res.status(500).json({
+      message: err.message,
+    });
+  });
 } catch (error) {
   console.error("Error in server setup:", error);
   process.exit(1);

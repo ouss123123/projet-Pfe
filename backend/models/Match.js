@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 
 const matchSchema = new mongoose.Schema(
   {
-    title: String,
+    title: { type: String, required: true },
     location: {
       type: String,
+      required: true
     },
-    date: Date,
-    time: String,
-    maxPlayers: Number,
+    date: { type: Date, required: true },
+    time: { type: String, required: true },
+    maxPlayers: { type: Number, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     players: [
       {

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  phone: String,
-  password: { type: String },
-  profile_picture: String,
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: Number, required: true },
+  password: { type: String, required: true },
+  profile_picture: { type: String, default: "/images/default.webp" },
   role: { type: String, enum: ["player", "admin"], default: "player" },
   token: {
     type: String,
