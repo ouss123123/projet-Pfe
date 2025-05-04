@@ -101,9 +101,41 @@ const getUserById = asyncWrapper(async (req, res) => {
   });
 });
 
+const updateProfile = asyncWrapper(async (req, res) => {
+  const userId = req.params.id;
+  let profilePic = null;
+  if (avatar) {
+    const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
+    const fileType = "webp";
+    const fileName = `profile-${Date.now()}.${fileType}`;
+    const filePath = path.join(uploadFolderPath, fileName);
+
+    fs.writeFileSync(filePath, base64Data, { encoding: "base64" });
+    profilePic = path.join("uploads", fileName);
+  }
+  const update = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    password: req.body.password,
+    profile_picture: profilePic,
+  };
+  const user = await userModel.findByIdAndUpdate(userId, update, {
+    new: true,
+  });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  return res.status(200).json({
+    message: "user updated successfully",
+    data: user,
+  });
+});
+
 module.exports = {
   getUsers,
   SignUp,
   Login,
   getUserById,
+  updateProfile,
 };

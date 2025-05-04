@@ -11,5 +11,6 @@ router.post(
   usersController.SignUp
 ); 
 router.post("/login", usersController.Login);
+router.put("/:id",usersController.updateProfile)
 
 module.exports = router;
