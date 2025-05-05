@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   phone: { type: Number, required: true },
   password: { type: String, required: true },
   profile_picture: { type: String, default: "../public/images/default.webp" },
+  resetPasswordToken: { type: String, default: null },
   role: { type: String, enum: ["player", "admin"], default: "player" },
   token: {
     type: String,

@@ -3,6 +3,8 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcrypt");
+const twilio = require("twilio");
+const crypto = require("crypto");
 const generateJWT = require("../utils/generateJWT.js");
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
 
@@ -103,7 +105,7 @@ const getUserById = asyncWrapper(async (req, res) => {
 
 const updateProfile = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
-  const {avatar} = req.body;
+  const { avatar } = req.body;
   let profilePic = req.body.image;
   if (avatar) {
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
@@ -133,10 +135,49 @@ const updateProfile = asyncWrapper(async (req, res) => {
   });
 });
 
+const forgetPassword = asyncWrapper(async (req, res) => {
+  const { email } = req.body;
+  const user = await userModel.findOne({ email });
+  const accountSid = process.env.TWILIO_SID;
+  const authToken = process.env.TWILIO_TOKEN;
+  const client = new twilio(accountSid, authToken);
+  const token = crypto.randomBytes(32).toString("hex");
+  await userModel.findByIdAndUpdate(user._id, {
+    resetPasswordToken: token,
+  });
+  const resetLink = `http://localhost:5173/password/reset?token=${token}`;
+  client.messages
+    .create({
+      body: resetLink,
+      from: `whatsapp:${process.env.TWILIO_NUMBER}`,
+      to: `whatsapp:+${user.phone}`,
+    })
+    .then((message) => console.log("Message sent with SID:", message.sid))
+    .catch((err) => console.error("Error sending message:", err));
+});
+
+const resetPassword = asyncWrapper(async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const user = await userModel.findOneAndUpdate(
+    { resetPasswordToken: req.body.resetPasswordToken },
+    {
+      $set: {
+        password: hashedPassword,
+      },
+    }
+  );
+  return res.status(200).json({
+    message : "password updated successfully",
+    data : user
+  })
+});
+
 module.exports = {
   getUsers,
   SignUp,
   Login,
   getUserById,
   updateProfile,
+  forgetPassword,
+  resetPassword
 };
