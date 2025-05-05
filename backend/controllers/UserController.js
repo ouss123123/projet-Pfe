@@ -103,6 +103,7 @@ const getUserById = asyncWrapper(async (req, res) => {
 
 const updateProfile = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
+  const {avatar} = req.body;
   let profilePic = null;
   if (avatar) {
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
