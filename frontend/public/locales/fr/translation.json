@@ -138,5 +138,8 @@
     "New Password:": "Nouveau mot de passe :",
     "Confirm Password:": "Confirmer le mot de passe :",
     "Resetting...": "Réinitialisation en cours...",
-    "Welcome back! Please enter your details" : "Bon retour ! Veuillez entrer vos informations."
+    "Welcome back! Please enter your details" : "Bon retour ! Veuillez entrer vos informations.",
+    "Settings": "paramètres",
+    "User": "Utilisateur"
+
   }

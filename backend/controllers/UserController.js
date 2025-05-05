@@ -57,7 +57,7 @@ const Login = asyncWrapper(async (req, res) => {
 const SignUp = asyncWrapper(async (req, res) => {
   const { name, email, phone, password, avatar } = req.body;
 
-  let profile_picture = null;
+  let profile_picture = "../public/images/default.webp";
   if (avatar) {
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
     const fileType = "webp";
@@ -104,7 +104,7 @@ const getUserById = asyncWrapper(async (req, res) => {
 const updateProfile = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
   const {avatar} = req.body;
-  let profilePic = null;
+  let profilePic = req.body.image;
   if (avatar) {
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
     const fileType = "webp";

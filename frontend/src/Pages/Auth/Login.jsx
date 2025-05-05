@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../../axios/axiosInstance";
 import { useTranslation } from "react-i18next";
 
+
 const Login = () => {
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
@@ -24,8 +25,12 @@ const Login = () => {
         
 
         sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("name", res.data.data.name);
+        sessionStorage.setItem("profile_picture", res.data.data.profile_picture);
+        console.log(res.data.data.profile_picture);
+        console.log(res.data.data.name);
 
-        navigate("/");
+        navigate("/dashboard");
       } catch (err) {
         console.error("Login failed:", err);
         setError(true);
