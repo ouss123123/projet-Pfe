@@ -42,7 +42,7 @@ const getUsers = asyncWrapper(async (req, res) => {
 const Login = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email });
-  const matchedPassword = bcrypt.compare(password, user.password);
+  const matchedPassword = await bcrypt.compare(password, user.password);
   if (!user || !matchedPassword) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
@@ -138,6 +138,9 @@ const updateProfile = asyncWrapper(async (req, res) => {
 const forgetPassword = asyncWrapper(async (req, res) => {
   const { email } = req.body;
   const user = await userModel.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
   const accountSid = process.env.TWILIO_SID;
   const authToken = process.env.TWILIO_TOKEN;
   const client = new twilio(accountSid, authToken);
@@ -152,8 +155,12 @@ const forgetPassword = asyncWrapper(async (req, res) => {
       from: `whatsapp:${process.env.TWILIO_NUMBER}`,
       to: `whatsapp:+${user.phone}`,
     })
-    .then((message) => console.log("Message sent with SID:", message.sid))
-    .catch((err) => console.error("Error sending message:", err));
+    .then(() =>
+      res.status(200).json({
+        message: "Message sent successfully",
+      })
+    )
+    .catch((err) => res.status(500).json("error !!"));
 });
 
 const resetPassword = asyncWrapper(async (req, res) => {
@@ -163,13 +170,17 @@ const resetPassword = asyncWrapper(async (req, res) => {
     {
       $set: {
         password: hashedPassword,
+        resetPasswordToken: null,
       },
     }
   );
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
   return res.status(200).json({
-    message : "password updated successfully",
-    data : user
-  })
+    message: "password updated successfully",
+    data: user,
+  });
 });
 
 module.exports = {
@@ -179,5 +190,5 @@ module.exports = {
   getUserById,
   updateProfile,
   forgetPassword,
-  resetPassword
+  resetPassword,
 };

@@ -7,6 +7,8 @@ const SignUp = lazy(() => import("./Pages/Auth/SignUp"));
 const Login = lazy(() => import("./Pages/Auth/Login"));
 const NotFound = lazy(() => import("./Pages/NotFound/NotFound"));
 const Dashboard = lazy(() => import("./Pages/Pages/dashboard"));
+const ResetPassword = lazy(() => import("./Pages/Auth/ResetPassword"));
+const ForgotPassword = lazy(() => import("./Pages/Auth/ForgotPassword"));
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

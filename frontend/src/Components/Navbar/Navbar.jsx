@@ -11,16 +11,14 @@ const Navbar = () => {
   const { t, i18n } = useTranslation();
   const token = sessionStorage.getItem("token");
   const profilePicture = sessionStorage.getItem("profile_picture");
-  let Pic ="";
-  if (profilePicture.includes("uploads")) {
-    Pic = `http://localhost:5000/uploads/usersImages/${profilePicture.slice(8)}`;}
-  else {
-    Pic = `http://localhost:5000/${profilePicture.slice(9)}`;
+  let Pic = "";
+  if (profilePicture?.includes("uploads")) {
+    Pic = `http://localhost:5000/uploads/usersImages/${profilePicture?.slice(
+      8
+    )}`;
+  } else {
+    Pic = `http://localhost:5000/${profilePicture?.slice(9)}`;
   }
-
-  console.log(Pic);
-  // console.log(profilePicture);
-
 
   const handleLogOut = async () => {
     try {
@@ -45,7 +43,7 @@ const Navbar = () => {
   useEffect(() => {
     const lang = i18n.language;
     lang === "ar" ? (document.body.dir = "rtl") : "ltr";
-    lang!= "ar" ? (document.body.dir = "ltr") : "rtl";
+    lang != "ar" ? (document.body.dir = "ltr") : "rtl";
   }, [i18n.language]);
 
   return (
@@ -119,7 +117,7 @@ const Navbar = () => {
         {!token ? (
           <>
             <Link
-              to="/sign-up"
+              to="/signup"
               className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition-all"
             >
               {t("Sign Up")}
@@ -175,7 +173,7 @@ const Navbar = () => {
                   to="/profile"
                   className="block text-gray-700 hover:text-blue-600 mb-2"
                 >
-                  {t("Profile")} 
+                  {t("Profile")}
                 </Link>
                 <Link
                   to="/settings"
