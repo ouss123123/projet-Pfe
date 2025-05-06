@@ -120,7 +120,6 @@ const updateProfile = asyncWrapper(async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    password: req.body.password,
     profile_picture: profilePic,
   };
   const user = await userModel.findByIdAndUpdate(userId, update, {
@@ -160,7 +159,7 @@ const forgetPassword = asyncWrapper(async (req, res) => {
         message: "Message sent successfully",
       })
     )
-    .catch((err) => res.status(500).json("error !!"));
+    .catch(() => res.status(500).json("error !!"));
 });
 
 const resetPassword = asyncWrapper(async (req, res) => {
