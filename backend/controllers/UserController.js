@@ -40,19 +40,26 @@ const getUsers = asyncWrapper(async (req, res) => {
 });
 
 const Login = asyncWrapper(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password: plainPassword } = req.body;
   const user = await userModel.findOne({ email });
-  const matchedPassword = await bcrypt.compare(password, user.password);
-  if (!user || !matchedPassword) {
+
+  if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
+
+  const matchedPassword = await bcrypt.compare(plainPassword, user.password);
+  if (!matchedPassword) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const { password, role, resetPasswordToken, ...safeUser } = user.toObject();
 
   const token = await generateJWT({ id: user._id, email: user.email });
 
   res.status(200).json({
     message: "Login successful",
     token,
-    data: user,
+    data: safeUser,
   });
 });
 
