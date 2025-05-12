@@ -3,8 +3,8 @@ const { body, query, param } = require("express-validator");
 const loginValidation = [
   body("email").isEmail().withMessage("Invalid email"),
   body("password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 8 characters long")
+    .isLength({ min: 5 })
+    .withMessage("Password must be at least 5 characters long")
     .notEmpty()
     .withMessage("Password is required"),
 ];
@@ -12,7 +12,7 @@ const loginValidation = [
 const registerValidation = [
   body("email").isEmail().withMessage("Invalid email"),
   body("password")
-    .isLength({ min: 6 })
+    .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long")
     .notEmpty()
     .withMessage("Password is required"),
