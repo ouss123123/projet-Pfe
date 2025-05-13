@@ -7,6 +7,7 @@ const SignUp = lazy(() => import("./Pages/Auth/SignUp"));
 const Login = lazy(() => import("./Pages/Auth/Login"));
 const NotFound = lazy(() => import("./Pages/NotFound/NotFound"));
 const Dashboard = lazy(() => import("./Pages/Pages/dashboard"));
+const CreateMatch = lazy(() => import("./Pages/Pages/createMatch"));
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/create-match" element={<CreateMatch/>}/>
         </Routes>
       </Suspense>
     </BrowserRouter>

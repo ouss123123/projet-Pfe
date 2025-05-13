@@ -1,11 +1,13 @@
 import React from "react";
-import Navbar from "../../Components/Navbar/Navbar";
+import Navbar from "../../Components/Navbar/userNav";
+import CreateMatch from "./createMatch";
 
-export default function Dashboard() {
+const Dashboard = () => {
   return (
     <>
-      <Navbar />
-      <div>Dashboard</div>
+        <Navbar />
+        <CreateMatch />
     </>
   );
-}
+};
+export default Dashboard;

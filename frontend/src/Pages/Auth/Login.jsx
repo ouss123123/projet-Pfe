@@ -27,6 +27,7 @@ const Login = () => {
         sessionStorage.setItem("token", res.data.token);
         sessionStorage.setItem("name", res.data.data.name);
         sessionStorage.setItem("profile_picture", res.data.data.profile_picture);
+        sessionStorage.setItem("userId", res.data.data._id);
         console.log(res.data.data.profile_picture);
         console.log(res.data.data.name);
 
