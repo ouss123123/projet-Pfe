@@ -6,6 +6,7 @@ const http = require("http");
 const connectDB = require("./connection/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
 const matchRoutes = require("./routes/matchRoute.js");
+const stadiumRoutes = require("./routes/stadiumRoute.js");
 const limiter = require("./middlewares/limiter.js");
 
 const app = express();
@@ -31,6 +32,7 @@ connectDB();
 try {
   app.use("/users", userRoutes);
   app.use("/matches", matchRoutes);
+  app.use("/stadiums", stadiumRoutes);
   app.use((err, req, res, next) => {
     res.status(500).json({
       message: err.message,
