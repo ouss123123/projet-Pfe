@@ -17,6 +17,12 @@ router.post(
   stadiumController.createStadium
 );
 
+router.get(
+    "/"
+    ,verifyToken,
+    stadiumController.getStadiums
+)
+
 router.delete(
   "/:id",
   verifyToken,

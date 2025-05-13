@@ -14,4 +14,6 @@ router.post(
   matchController.createMatch
 );
 
+router.get("/", verifyToken, matchController.getMatches);
+
 module.exports = router;
