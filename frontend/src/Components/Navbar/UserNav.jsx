@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFutbol } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
-
+import axiosInstance from "../../axios/axiosInstance";
 
 const userNav = () => {
     const userName = sessionStorage.getItem("name") || "Guest";
@@ -58,27 +58,27 @@ const userNav = () => {
                     MatchUp
                 </Link>
             </div>
-            <ul className="hidden md:flex items-center justify-center gap-10">
+            <ul className="hidden md:flex items-center justify-center gap-10 ml-8">
                 <li>
                     <Link
                         to="/"
-                        className="font-bold text-white text-lg transition-colors duration-300 hover:text-cyan-500"
+                        className="font-bold text-white text-lg transition-colors duration-300 hover:border-b-2 hover:border-white focus:border-b-2 focus:border-white"
                     >
-                        Home
+                        {t("Home")}
                     </Link>
                 </li>
                 <li>
                     <Link
-                        to="/about"
-                        className="font-bold text-white text-lg transition-colors duration-300 hover:text-cyan-500"
+                        to="/dashboard/create-match"
+                        className="font-bold text-white text-lg transition-colors duration-300 hover:border-b-2 hover:border-white"
                     >
-                        About
+                        {t("Create match")}
                     </Link>
                 </li>
                 <li>
                     <Link
                         to="/services"
-                        className="font-bold text-white text-lg transition-colors duration-300 hover:text-cyan-500"
+                        className="font-bold text-white text-lg transition-colors duration-300 hover:border-b-2 hover:border-white"
                     >
                         Services
                     </Link>
@@ -86,7 +86,7 @@ const userNav = () => {
                 <li>
                     <Link
                         to="/contact"
-                        className="font-bold text-white text-lg transition-colors duration-300 hover:text-cyan-500"
+                        className="font-bold text-white text-lg transition-colors duration-300 hover:border-b-2 hover:border-white"
                     >
                         Contact
                     </Link>
@@ -94,7 +94,7 @@ const userNav = () => {
             </ul>
             <div className="relative">
                 <div
-                    className="flex items-center cursor-pointer"
+                    className="flex items-center cursor-pointer ml-90"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                     <img
@@ -106,7 +106,7 @@ const userNav = () => {
                     <span className="font-bold">{userName}</span>
                 </div>
                 {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg p-4">
+                    <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg p-4 hover:bg-green-600">
                         <div
                             className="cursor-pointer hover:bg-gray-100 p-2 rounded"
                             onClick={() => navigate("/profile")}
@@ -125,7 +125,7 @@ const userNav = () => {
             <div>
           <label htmlFor="language"></label>
           <select
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 bg-white focus:ring-green-600 text-black"
             value={i18n.language}
             id="language"
             onChange={handleLanguage}

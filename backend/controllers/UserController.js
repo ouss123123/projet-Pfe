@@ -3,6 +3,8 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcrypt");
+const twilio = require("twilio");
+const crypto = require("crypto");
 const generateJWT = require("../utils/generateJWT.js");
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
 
@@ -38,19 +40,26 @@ const getUsers = asyncWrapper(async (req, res) => {
 });
 
 const Login = asyncWrapper(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password: plainPassword } = req.body;
   const user = await userModel.findOne({ email });
-  const matchedPassword = bcrypt.compare(password, user.password);
-  if (!user || !matchedPassword) {
+
+  if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
+
+  const matchedPassword = await bcrypt.compare(plainPassword, user.password);
+  if (!matchedPassword) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const { password, role, resetPasswordToken, ...safeUser } = user.toObject();
 
   const token = await generateJWT({ id: user._id, email: user.email });
 
   res.status(200).json({
     message: "Login successful",
     token,
-    data: user,
+    data: safeUser,
   });
 });
 
@@ -103,7 +112,7 @@ const getUserById = asyncWrapper(async (req, res) => {
 
 const updateProfile = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
-  const {avatar} = req.body;
+  const { avatar } = req.body;
   let profilePic = req.body.image;
   if (avatar) {
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, "");
@@ -118,7 +127,6 @@ const updateProfile = asyncWrapper(async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    password: req.body.password,
     profile_picture: profilePic,
   };
   const user = await userModel.findByIdAndUpdate(userId, update, {
@@ -133,10 +141,60 @@ const updateProfile = asyncWrapper(async (req, res) => {
   });
 });
 
+const forgetPassword = asyncWrapper(async (req, res) => {
+  const { email } = req.body;
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const accountSid = process.env.TWILIO_SID;
+  const authToken = process.env.TWILIO_TOKEN;
+  const client = new twilio(accountSid, authToken);
+  const token = crypto.randomBytes(32).toString("hex");
+  await userModel.findByIdAndUpdate(user._id, {
+    resetPasswordToken: token,
+  });
+  const resetLink = `http://localhost:5173/password/reset?token=${token}`;
+  client.messages
+    .create({
+      body: resetLink,
+      from: `whatsapp:${process.env.TWILIO_NUMBER}`,
+      to: `whatsapp:+${user.phone}`,
+    })
+    .then(() =>
+      res.status(200).json({
+        message: "Message sent successfully",
+      })
+    )
+    .catch(() => res.status(500).json("error !!"));
+});
+
+const resetPassword = asyncWrapper(async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const user = await userModel.findOneAndUpdate(
+    { resetPasswordToken: req.body.resetPasswordToken },
+    {
+      $set: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+      },
+    }
+  );
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+  return res.status(200).json({
+    message: "password updated successfully",
+    data: user,
+  });
+});
+
 module.exports = {
   getUsers,
   SignUp,
   Login,
   getUserById,
   updateProfile,
+  forgetPassword,
+  resetPassword,
 };

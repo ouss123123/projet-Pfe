@@ -6,20 +6,25 @@ const http = require("http");
 const connectDB = require("./connection/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
 const matchRoutes = require("./routes/matchRoute.js");
+const limiter = require("./middlewares/limiter.js");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static("public"));
+app.use(limiter);
 
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
-
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.static("public"));
 
 connectDB();
 
