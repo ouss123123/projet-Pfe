@@ -1,4 +1,4 @@
-const asyncWrapper = require("../middleware/asyncWrapper");
+const asyncWrapper = require("../middlewares/asyncWrapper.js");
 const Stadium = require("../models/Stadium");
 
 const createStadium = asyncWrapper(async (req, res) => {
