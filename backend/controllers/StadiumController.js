@@ -4,15 +4,17 @@ const Stadium = require("../models/Stadium");
 const createStadium = asyncWrapper(async (req, res) => {
   const { name } = req.body;
   const { longitude, latitude } = req.body.location;
-  
-    if (!name) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-    
-      const stadium = await Stadium.create({ name, location: { longitude, latitude } });
-    
 
-return res.status(201).json(stadium);
+  if (!name) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const stadium = await Stadium.create({
+    name,
+    location: { longitude, latitude },
+  });
+
+  return res.status(201).json(stadium);
 });
 
 const deleteStadium = asyncWrapper(async (req, res) => {
