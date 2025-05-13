@@ -24,7 +24,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="/dashboard/create-match" element={<CreateMatch />} />
           </Route>
-
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
