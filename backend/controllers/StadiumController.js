@@ -33,8 +33,10 @@ const getStadiums = asyncWrapper(async (req, res) => {
   const limit = req.query.limit || 10;
   const page = req.query.page || 1;
   const skip = page >= 1 && (page - 1) * limit;
-  const stadiums = await matchModel
-    .find({}, { password: false, __v: false, token: false })
+  const stadiums = await Stadium.find(
+    {},
+    { password: false, __v: false, token: false }
+  )
     .limit(limit)
     .skip(skip);
   return res.status(200).json({
@@ -58,5 +60,5 @@ const getStadiums = asyncWrapper(async (req, res) => {
 module.exports = {
   createStadium,
   deleteStadium,
-  getStadiums
+  getStadiums,
 };
