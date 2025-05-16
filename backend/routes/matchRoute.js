@@ -1,7 +1,11 @@
 const express = require("express");
 const matchController = require("../controllers/MatchController.js");
 const verifyToken = require("../middlewares/verifyToken.js");
-const { createGameValidator } = require("../validations/matchValidation.js");
+const {
+  createGameValidator,
+  searchGameValidator,
+  addPlayersValidator,
+} = require("../validations/matchValidation.js");
 const validate = require("../middlewares/validate.js");
 
 const router = express.Router();
@@ -12,6 +16,22 @@ router.post(
   createGameValidator,
   validate,
   matchController.createMatch
+);
+
+router.get(
+  "/search",
+  verifyToken,
+  searchGameValidator,
+  validate,
+  matchController.searchMatch
+);
+
+router.patch(
+  "/:id",
+  verifyToken,
+  addPlayersValidator,
+  validate,
+  matchController.addPlayers
 );
 
 router.get("/", verifyToken, matchController.getMatches);

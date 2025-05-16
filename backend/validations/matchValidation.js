@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body , query } = require("express-validator");
 
 const createGameValidator = [
   body("title")
@@ -28,6 +28,18 @@ const createGameValidator = [
     .withMessage("maxPlayers must be a positive integer"),
 ];
 
+const searchGameValidator = [
+  query("title")
+    .notEmpty()
+    .withMessage("title is required")
+]
+
+const addPlayersValidator = [
+  body("newPlayers").notEmpty().withMessage("players are required"),
+];
+
 module.exports = {
   createGameValidator,
+  searchGameValidator,
+  addPlayersValidator
 };
