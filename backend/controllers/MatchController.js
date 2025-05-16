@@ -32,20 +32,21 @@ const addPlayers = asyncWrapper(async (req, res) => {
 
   if (!updatedTeam) return res.status(404).send("Team not found");
   res.json({
-    message : "player added successfully",
-    data : updatedTeam
+    message: "player added successfully",
+    data: updatedTeam,
   });
 });
 
 const searchMatch = asyncWrapper(async (req, res) => {
-  const title = req.query.title;
+  const { title, location } = req.query;
   const matches = await matchModel.find({
     title: { $regex: title, $options: "i" },
+    location: { $regex: location, $options: "i" },
   });
   return res.status(200).json({
-    message : "founded",
-    data : matches
-  })
+    message: "founded",
+    data: matches,
+  });
 });
 
 const getMatches = asyncWrapper(async (req, res) => {
@@ -78,5 +79,5 @@ module.exports = {
   createMatch,
   getMatches,
   addPlayers,
-  searchMatch
+  searchMatch,
 };
