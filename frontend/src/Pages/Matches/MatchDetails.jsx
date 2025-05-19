@@ -22,7 +22,7 @@ const MatchDetails = () => {
                 const response = await axiosInstance.get(`/matches/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log(response.data.user.name);
+                console.log(response.data);
                 setMatch(response.data);
             } catch (err) {
                 setError(t("Failed to fetch match details"));

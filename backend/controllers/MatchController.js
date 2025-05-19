@@ -3,7 +3,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper.js");
 const userModel = require("../models/User.js");
 
 const createMatch = asyncWrapper(async (req, res) => {
-  const { title, location, date, time, players, createdBy, maxPlayers } =
+  const { title, location, date, time, players, createdBy, maxPlayers, Price } =
     req.body;
   const newMatch = new matchModel({
     title,
@@ -13,6 +13,7 @@ const createMatch = asyncWrapper(async (req, res) => {
     players,
     createdBy,
     maxPlayers,
+    Price,
   });
   await newMatch.save();
   res.status(201).json({

@@ -9,6 +9,7 @@ const matchSchema = new mongoose.Schema(
     date: { type: Date },
     time: { type: String },
     maxPlayers: { type: Number },
+    price: { type: Number },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     players: [
       {
