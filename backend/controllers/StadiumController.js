@@ -14,7 +14,10 @@ const createStadium = asyncWrapper(async (req, res) => {
     location: { longitude, latitude },
   });
 
-  return res.status(201).json(stadium);
+  return res.status(201).json({
+    message: "Stadium created successfully",
+    data: stadium,
+  });
 });
 
 const deleteStadium = asyncWrapper(async (req, res) => {

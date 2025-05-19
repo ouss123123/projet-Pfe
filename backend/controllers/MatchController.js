@@ -20,6 +20,35 @@ const createMatch = asyncWrapper(async (req, res) => {
   });
 });
 
+const addPlayers = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { players } = req.body;
+
+  const updatedTeam = await matchModel.findByIdAndUpdate(
+    id,
+    { $addToSet: { players: { $each: players } } },
+    { new: true }
+  );
+
+  if (!updatedTeam) return res.status(404).send("Team not found");
+  res.json({
+    message: "player added successfully",
+    data: updatedTeam,
+  });
+});
+
+const searchMatch = asyncWrapper(async (req, res) => {
+  const { title, location } = req.query;
+  const matches = await matchModel.find({
+    title: { $regex: title, $options: "i" },
+    location: { $regex: location, $options: "i" },
+  });
+  return res.status(200).json({
+    message: "founded",
+    data: matches,
+  });
+});
+
 const getMatches = asyncWrapper(async (req, res) => {
   const limit = req.query.limit || 10;
   const page = req.query.page || 1;
@@ -49,4 +78,6 @@ const getMatches = asyncWrapper(async (req, res) => {
 module.exports = {
   createMatch,
   getMatches,
+  addPlayers,
+  searchMatch,
 };
