@@ -25,18 +25,32 @@ const addPlayers = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const { players } = req.body;
 
-  const updatedTeam = await matchModel.findByIdAndUpdate(
-    id,
-    { $addToSet: { players: { $each: players } } },
-    { new: true }
-  );
+  const match = await matchModel.findById(id);
+  if (!match) return res.status(404).send("Team not found");
 
-  if (!updatedTeam) return res.status(404).send("Team not found");
+  players.forEach((incomingPlayer) => {
+    const existingPlayer = match.players.find(
+      (p) => p.user.toString() === incomingPlayer.user.toString()
+    );
+
+    if (existingPlayer) {
+      existingPlayer.isPlaying = true; 
+    } else {
+      match.players.push({
+        user: incomingPlayer.user,
+        isPlaying: true, 
+      });
+    }
+  });
+
+  const updatedTeam = await match.save();
+
   res.json({
-    message: "player added successfully",
+    message: "Players added and updated successfully",
     data: updatedTeam,
   });
 });
+
 
 const searchMatch = asyncWrapper(async (req, res) => {
   const { title, location } = req.query;
@@ -83,9 +97,29 @@ const getMatchById = asyncWrapper(async (req, res) => {
   if (!match) {
     return res.status(404).json({ message: "Match not found" });
   }
-  res.status(200).json({ message: "success", data: match , user: user });
+  res.status(200).json({ message: "success", data: match, user: user });
 });
 
+const matchCanceled = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { isCanceled } = req.body;
+  if (isCanceled === true) {
+    await matchModel.findByIdAndDelete(id);
+  }
+  return res.status(200).json({ message: "success" });
+});
+
+const playerCanceled = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { playerId } = req.body;
+  const match = await matchModel.findById(id);
+  const playerIndex = match.players.findIndex(
+    (player) => player.user == playerId
+  );
+  match.players.splice(playerIndex, 1);
+  await match.save();
+  return res.status(200).json({ message: "success" });
+});
 
 module.exports = {
   createMatch,
@@ -93,4 +127,6 @@ module.exports = {
   addPlayers,
   searchMatch,
   getMatchById,
+  matchCanceled,
+  playerCanceled
 };

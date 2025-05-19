@@ -38,7 +38,7 @@ const searchGameValidator = [
 ]
 
 const addPlayersValidator = [
-  body("newPlayers").notEmpty().withMessage("players are required"),
+  body("players").notEmpty().withMessage("players are required"),
 ];
 
 module.exports = {
