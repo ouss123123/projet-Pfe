@@ -19,20 +19,11 @@ const userNav = () => {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleLogout = async () => {
-        try {
-            await axiosInstance.post(
-                "/logout",
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-        } catch (error) {
-            console.error("Logout error:", error);
-        } finally {
+    const handleLogout =  () => {
             sessionStorage.clear();
             localStorage.clear();
             navigate("/");
-        }
+        
     };
     const { t, i18n } = useTranslation();
 
