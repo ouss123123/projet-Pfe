@@ -34,6 +34,10 @@ router.patch(
   matchController.addPlayers
 );
 
+router.delete("/:id", verifyToken, matchController.matchCanceled);
+
+router.delete("/players/:id", verifyToken, matchController.playerCanceled);
+
 router.get("/", verifyToken, matchController.getMatches);
 
 router.get("/:id", verifyToken, matchController.getMatchById);

@@ -14,6 +14,7 @@ const matchSchema = new mongoose.Schema(
     players: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        isPlaying : {type: Boolean, default: false },
       },
     ],
     isCanceled: { type: Boolean, default: false },
