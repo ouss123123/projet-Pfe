@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useState } from "react";
 import { Suspense } from "react";
 import Spinner from "./Components/Loading/Spinner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -10,20 +10,24 @@ const Dashboard = lazy(() => import("./Pages/Dashboard/dashboard"));
 const CreateMatch = lazy(() => import("./Pages/Matches/CreateMatch"));
 const ResetPassword = lazy(() => import("./Pages/Auth/ResetPassword"));
 const ForgotPassword = lazy(() => import("./Pages/Auth/ForgotPassword"));
+const Profile = lazy(() => import("./Pages/Profile/Profile"));
+const MatchDetails = lazy(() => import("./Pages/Matches/MatchDetails"));
 
 function App() {
+  const [IsConnected, setIsConnected] = useState(false);
   return (
     <BrowserRouter>
       <Suspense fallback={<Spinner />}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/" element={<Home setIsConnected={setIsConnected} />} />
+          <Route path="/signup" element={<SignUp/>} />
+          <Route path="/login" element={<Login  setIsConnected={setIsConnected}/>} />
+          <Route path="/dashboard" element={<Dashboard  setIsConnected={setIsConnected}/>}/>
+          <Route path="/create-match" element={<CreateMatch setIsConnected={setIsConnected} />} />
+          <Route path="/profile" element={<Profile setIsConnected={setIsConnected} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="/dashboard/create-match" element={<CreateMatch />} />
-          </Route>
+          <Route path="/reset" element={<ResetPassword/>} />
+          <Route path="/matches/:id" element={<MatchDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

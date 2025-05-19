@@ -1,24 +1,35 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-const Map = ({ lat, lng }) => {
-  const position = [lat || 31.7917, lng || -7.0926];
+// Component to update the map center dynamically
+const UpdateMapCenter = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) {
+      map.setView([lat, lng], map.getZoom());
+    }
+  }, [lat, lng, map]);
+  return null;
+};
+
+const Map = React.memo(({ lat, lng }) => {
+  const position = [lat || 30.399724133263636, lng || -9.550289511629696];
 
   return (
-    <div className="z-[-1] w-full">
+    <div>
       <MapContainer
         center={position}
-        zoom={6}
-        style={{ height: "400px", width: "100%" }}
+        zoom={16}
+        style={{ height: "550px", width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Marker position={position}>
-          <Popup>{`Lat: ${lat}, Lng: ${lng}`}</Popup>
-        </Marker>
+        <Marker position={position} />
+        {/* Update the map center dynamically */}
+        <UpdateMapCenter lat={lat} lng={lng} />
       </MapContainer>
     </div>
   );
-};
+});
 
 export default Map;

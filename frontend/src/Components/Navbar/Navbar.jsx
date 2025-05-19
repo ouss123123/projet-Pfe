@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import logo from "../../assets/react.svg";
 
 const Navbar = () => {
-  const [arrow, SetArrow] = useState(false);
   const { t, i18n } = useTranslation();
 
   const handleLanguage = (e) => {

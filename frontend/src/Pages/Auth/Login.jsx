@@ -5,12 +5,14 @@ import axiosInstance from "../../axios/axiosInstance";
 import { useTranslation } from "react-i18next";
 
 
-const Login = () => {
+const Login = ({setIsConnected}) => {
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [error, setError] = useState(false),
     { t } = useTranslation(),
     navigate = useNavigate(),
+
+
     handleLogin = async (e) => {
       e.preventDefault();
       setError(false);
@@ -26,10 +28,11 @@ const Login = () => {
 
         sessionStorage.setItem("token", res.data.token);
         sessionStorage.setItem("name", res.data.data.name);
+        sessionStorage.setItem("email", res.data.data.email);
+        sessionStorage.setItem("phone", res.data.data.phone);
         sessionStorage.setItem("profile_picture", res.data.data.profile_picture);
         sessionStorage.setItem("userId", res.data.data._id);
-        console.log(res.data.data.profile_picture);
-        console.log(res.data.data.name);
+        setIsConnected(true);
 
         navigate("/dashboard");
       } catch (err) {

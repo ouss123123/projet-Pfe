@@ -5,14 +5,14 @@ import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
   const [signUp, setSignUp] = useState({
-      name: "",
-      phone: "",
-      email: "",
-      password: "",
-      profile_picture: "",
-    }),
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    profile_picture: "",
+  }),
+  { t } = useTranslation(),
     [base64Image, setBase64Image] = useState(""),
-    { t } = useTranslation(),
     handleImageInput = (e) => {
       let a = e.target.files[0],
         p = new FileReader();
