@@ -1,5 +1,6 @@
 const matchModel = require("../models/Match");
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
+const userModel = require("../models/User.js");
 
 const createMatch = asyncWrapper(async (req, res) => {
   const { title, location, date, time, players, createdBy, maxPlayers } =
@@ -75,9 +76,21 @@ const getMatches = asyncWrapper(async (req, res) => {
   });
 });
 
+const getMatchById = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const match = await matchModel.findById(id);
+  const user = await userModel.findById(match.createdBy);
+  if (!match) {
+    return res.status(404).json({ message: "Match not found" });
+  }
+  res.status(200).json({ message: "success", data: match , user: user });
+});
+
+
 module.exports = {
   createMatch,
   getMatches,
   addPlayers,
   searchMatch,
+  getMatchById,
 };

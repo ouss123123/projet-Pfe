@@ -50,8 +50,8 @@ const CreateMatch = () => {
 
                 try {
                     const token = sessionStorage.getItem("token"); // Get the token from sessionStorage
-                    const response = await axios.post(
-                        "http://localhost:5000/matches", // Replace with your backend endpoint
+                    const response = await axiosInstance.post(
+                        "/matches", // Replace with your backend endpoint
                         {
                             ...formData,
                             players: [], // Initialize players as an empty array

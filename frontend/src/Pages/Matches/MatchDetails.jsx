@@ -22,7 +22,8 @@ const MatchDetails = () => {
                 const response = await axiosInstance.get(`/matches/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                setMatch(response.data.data);
+                console.log(response.data.user.name);
+                setMatch(response.data);
             } catch (err) {
                 setError(t("Failed to fetch match details"));
             }
@@ -41,25 +42,35 @@ const MatchDetails = () => {
         <div className="min-h-screen bg-gray-50">
             <UserNav />
             <div className="container mx-auto mt-24 max-w-xl bg-white p-8 rounded-xl shadow-lg">
-                <h1 className="text-3xl font-bold mb-4 text-green-700">{match.title}</h1>
+                <h1 className="text-3xl font-bold mb-4 text-green-700">{match.data.title}</h1>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Location")}:</span> {match.location}
+                    <span className="font-semibold">{t("Location")}:</span> {match.data.location}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Date")}:</span> {match.date}
+                    <span className="font-semibold">{t("Date")}:</span> {match.data.date ? new Date(match.data.date).toLocaleDateString() : ""}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Time")}:</span> {match.time}
+                    <span className="font-semibold">{t("Time")}:</span> {match.data.time}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Maximum Players")}:</span> {match.maxPlayers}
+                    <span className="font-semibold">{t("Maximum Players")}:</span> {match.data.maxPlayers}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Created By")}:</span> {match.createdBy?.name || match.createdBy}
+                    <span className="font-semibold">{t("Created By")}:</span> {match.user.name}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">{t("Players")}:</span> {match.players?.length || 0}
+                    <span className="font-semibold">{t("Players")}:</span> {match.data.players?.length || 0}
                 </div>
+                {match.players && match.players.length > 0 && (
+                  <div className="mb-2">
+                    <span className="font-semibold">{t("Players List")}:</span>
+                    <ul className="list-disc ml-6">
+                      {match.players.map((player, idx) => (
+                        <li key={idx}>{player.name || player}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
             </div>
         </div>
     );

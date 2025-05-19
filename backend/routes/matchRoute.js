@@ -36,4 +36,6 @@ router.patch(
 
 router.get("/", verifyToken, matchController.getMatches);
 
+router.get("/:id", verifyToken, matchController.getMatchById);
+
 module.exports = router;
