@@ -46,6 +46,8 @@ const DisplayMatches = () => {
     if (loading) return <div>Loading matches...</div>;
     if (!matches.data || matches.data.length === 0) return <div>No matches found.</div>;
 
+    
+
     const grouped = groupMatchesByDate(matches.data);
 
     return (
