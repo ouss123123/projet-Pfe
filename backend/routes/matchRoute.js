@@ -5,6 +5,9 @@ const {
   createGameValidator,
   searchGameValidator,
   addPlayersValidator,
+  matchCanceledValidator,
+  filterMatchValidator,
+  getMatchesValidator,
 } = require("../validations/matchValidation.js");
 const validate = require("../middlewares/validate.js");
 
@@ -34,12 +37,38 @@ router.patch(
   matchController.addPlayers
 );
 
-router.delete("/:id", verifyToken, matchController.matchCanceled);
+router.delete(
+  "/:id",
+  verifyToken,
+  matchCanceledValidator,
+  validate,
+  matchController.matchCanceled
+);
 
-router.delete("/players/:id", verifyToken, matchController.playerCanceled);
+router.delete(
+  "/players/:id",
+  verifyToken,
+  matchCanceledValidator,
+  validate,
+  matchController.playerCanceled
+);
 
-router.get("/", verifyToken, matchController.getMatches);
+router.get(
+  "/",
+  verifyToken,
+  getMatchesValidator,
+  validate,
+  matchController.getMatches
+);
 
 router.get("/:id", verifyToken, matchController.getMatchById);
+
+router.post(
+  "/filter",
+  verifyToken,
+  filterMatchValidator,
+  validate,
+  matchController.filterMatches
+);
 
 module.exports = router;

@@ -3,21 +3,21 @@ const cors = require("cors");
 const path = require("path");
 const bodyParser = require("body-parser");
 const http = require("http");
+const { Server } = require("socket.io");
+const { EventEmitter } = require("events");
 const connectDB = require("./connection/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
 const matchRoutes = require("./routes/matchRoute.js");
 const stadiumRoutes = require("./routes/stadiumRoute.js");
 const commentRoutes = require("./routes/commentRoute.js");
+const messageRoutes = require("./routes/messageRoutes.js");
 const limiter = require("./middlewares/limiter.js");
+
+EventEmitter.defaultMaxListeners = 20;
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -25,6 +25,23 @@ app.use(express.static("public"));
 app.use(limiter);
 
 const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("chat message", (message) => {
+    io.emit("chat message", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 
@@ -35,6 +52,7 @@ try {
   app.use("/matches", matchRoutes);
   app.use("/stadiums", stadiumRoutes);
   app.use("/comments", commentRoutes);
+  app.use("/messages",messageRoutes);
   app.use((err, req, res, next) => {
     res.status(500).json({
       message: err.message,
