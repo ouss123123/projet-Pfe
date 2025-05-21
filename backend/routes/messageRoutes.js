@@ -1,11 +1,11 @@
 const express = require("express");
 const MessageController = require("../controllers/MessageController.js");
 const verifyToken = require("../middlewares/verifyToken.js");
-import { validate } from "../models/Message.js";
-import {
+const validate = require("../middlewares/validate.js");
+const {
   getMessagesValidator,
   sendMessagesValidator,
-} from "../validations/messageValidator.js";
+} = require("../validations/messageValidator.js");
 
 const router = express.Router();
 
