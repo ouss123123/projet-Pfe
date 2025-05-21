@@ -35,11 +35,11 @@ const addPlayers = asyncWrapper(async (req, res) => {
     );
 
     if (existingPlayer) {
-      existingPlayer.isPlaying = true; 
+      existingPlayer.isPlaying = true;
     } else {
       match.players.push({
         user: incomingPlayer.user,
-        isPlaying: true, 
+        isPlaying: true,
       });
     }
   });
@@ -51,7 +51,6 @@ const addPlayers = asyncWrapper(async (req, res) => {
     data: updatedTeam,
   });
 });
-
 
 const searchMatch = asyncWrapper(async (req, res) => {
   const { title, location } = req.query;
@@ -122,6 +121,16 @@ const playerCanceled = asyncWrapper(async (req, res) => {
   return res.status(200).json({ message: "success" });
 });
 
+const filterMatches = asyncWrapper(async (req, res) => {
+  const { location, date } = req.body;
+  const dateReq = new Date(date); 
+  const match = await matchModel.find({
+    location: { $regex: location, $options: "i" },
+    date: { $lte: new Date(dateReq) },
+  });
+  return res.status(200).json({ message: "success", data: match });
+});
+
 module.exports = {
   createMatch,
   getMatches,
@@ -129,5 +138,6 @@ module.exports = {
   searchMatch,
   getMatchById,
   matchCanceled,
-  playerCanceled
+  playerCanceled,
+  filterMatches,
 };

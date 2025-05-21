@@ -15,6 +15,16 @@ const createComment = asyncWrapper(async (req, res) => {
   });
 });
 
+const getComments = asyncWrapper(async (req, res) => {
+  const { match } = req.params;
+  const matches = await commentModel.find({ match: match });
+  return res.status(200).json({
+    message : "Comments fetched successfully",
+    data : matches
+  })
+});
+
 module.exports = {
   createComment,
+  getComments,
 };
