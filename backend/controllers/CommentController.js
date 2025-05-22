@@ -17,11 +17,24 @@ const createComment = asyncWrapper(async (req, res) => {
 
 const getComments = asyncWrapper(async (req, res) => {
   const { match } = req.params;
-  const matches = await commentModel.find({ match: match });
+  const { lastCommentId, limit } = req.query;
+
+  let query = null;
+
+  !lastCommentId
+    ? (query = { match: match })
+    : (query = { _id: { $lte: lastCommentId }, match: match });
+
+  const comments = await commentModel
+    .find(query)
+    .sort({ _id: -1 })
+    .limit(+limit || 10)
+    .populate("createdBy", "name profile_picture");
+
   return res.status(200).json({
-    message : "Comments fetched successfully",
-    data : matches
-  })
+    message: "Comments fetched successfully",
+    data: comments,
+  });
 });
 
 module.exports = {
