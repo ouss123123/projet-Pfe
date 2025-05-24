@@ -7,19 +7,19 @@ import {
   SafeAreaView,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+const { useNavigation } = require("@react-navigation/native");
 import { useRouter } from "expo-router";
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const router: any = useRouter();
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const navigation = useNavigation();
 
-  const handleLogin: () => Promise<void> = async () => {
+  const handleLogin = async () => {
     try {
-      const res: Response = await fetch("", {
+      const res = await fetch("", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
       console.log(data);
 
       router.replace("/(tabs)");
-    } catch (error: any) {
+    } catch (error : any) {
       console.error("Fetch error:", error.message);
     }
   };

@@ -8,6 +8,7 @@ const {
   matchCanceledValidator,
   filterMatchValidator,
   getMatchesValidator,
+  playerCanceledValidator,
 } = require("../validations/matchValidation.js");
 const validate = require("../middlewares/validate.js");
 
@@ -48,7 +49,7 @@ router.delete(
 router.delete(
   "/players/:id",
   verifyToken,
-  matchCanceledValidator,
+  playerCanceledValidator,
   validate,
   matchController.playerCanceled
 );

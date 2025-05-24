@@ -104,7 +104,7 @@ const matchCanceled = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const { isCanceled } = req.body;
   if (isCanceled === true) {
-    await matchModel.findByIdAndDelete(id);
+    const data = await matchModel.findByIdAndDelete(id);
   }
   return res.status(200).json({ message: "success" });
 });
@@ -118,12 +118,12 @@ const playerCanceled = asyncWrapper(async (req, res) => {
   );
   match.players.splice(playerIndex, 1);
   await match.save();
-  return res.status(200).json({ message: "success" });
+  return res.status(200).json({ message: "success", data: match });
 });
 
 const filterMatches = asyncWrapper(async (req, res) => {
   const { location, date } = req.body;
-  const dateReq = new Date(date); 
+  const dateReq = new Date(date);
   const match = await matchModel.find({
     location: { $regex: location, $options: "i" },
     date: { $lte: new Date(dateReq) },

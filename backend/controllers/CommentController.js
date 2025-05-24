@@ -37,7 +37,37 @@ const getComments = asyncWrapper(async (req, res) => {
   });
 });
 
+const deleteComment = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const comment = await commentModel.findByIdAndDelete(id);
+  if (!comment) {
+    return res.status(404).json({
+      message: "Comment not found",
+    });
+  }
+  return res.status(200).json({
+    message: "comment deleted successfully",
+    data: comment,
+  });
+});
+
+const editComment = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { comment } = req.body;
+  const updatedComment = await commentModel.findByIdAndUpdate(
+    id,
+    { comment },
+    { new: true }
+  );
+  return res.status(200).json({
+    message: "comment updated successfully",
+    data: updatedComment,
+  });
+});
+
 module.exports = {
   createComment,
   getComments,
+  deleteComment,
+  editComment,
 };
