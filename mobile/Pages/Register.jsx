@@ -12,18 +12,20 @@ import {
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { launchImageLibrary } from "react-native-image-picker";
-import { Link, useRouter } from "expo-router";
+import {useNavigation} from "@react-navigation/native"
 
-const Register: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<any>();
-  const [avatar, setAvatar] = useState<any>(null);
-  const [avatarBase64, setAvatarBase64] = useState<string>("");
-  const router: any = useRouter();
+const Register= () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState();
+  const [avatar, setAvatar] = useState(null);
+  const [avatarBase64, setAvatarBase64] = useState("");
 
-  const selectImage: () => void = () => {
+  const navigation = useNavigation();
+  
+
+  const selectImage= () => {
     launchImageLibrary(
       {
         mediaType: "photo",
@@ -42,10 +44,10 @@ const Register: React.FC = () => {
   };
 
   const goToLogin = () => {
-    router.push("/auth/login");
+    navigation.navigate("Login");
   };
 
-  const handleRegister: () => Promise<void> = async () => {
+  const handleRegister = async () => {
     try {
       console.log("User Data:", { name, email, password, phone, avatarBase64 });
 
@@ -65,7 +67,7 @@ const Register: React.FC = () => {
       const data = await res.json();
       console.log("Response data:", data);
       router.replace("/auth/login");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Registration error:", error.message);
     }
   };

@@ -7,19 +7,18 @@ import {
   SafeAreaView,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-const { useNavigation } = require("@react-navigation/native");
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import Config from "react-native-config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
-
   const navigation = useNavigation();
+
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("", {
+      const res = await fetch(`${process.env.IP4V}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,18 +28,17 @@ const Login = () => {
           password,
         }),
       });
+      if(res) navigation.navigate("Home");
 
       const data = await res.json();
       console.log(data);
-
-      router.replace("/(tabs)");
-    } catch (error : any) {
+    } catch (error) {
       console.error("Fetch error:", error.message);
     }
   };
 
   const goToRegister = () => {
-    router.push("/auth/register");
+    navigation.navigate("Register");
   };
 
   return (
