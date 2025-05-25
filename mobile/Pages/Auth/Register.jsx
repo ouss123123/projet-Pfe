@@ -51,7 +51,7 @@ const Register= () => {
     try {
       console.log("User Data:", { name, email, password, phone, avatarBase64 });
 
-      const res = await fetch("", {
+      const res = await fetch(`${process.env.IP4V}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const Register= () => {
       });
       const data = await res.json();
       console.log("Response data:", data);
-      router.replace("/auth/login");
+      navigation.navigate("Login");
     } catch (error) {
       console.error("Registration error:", error.message);
     }
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 3,
-      elevation: 1, // Android shadow
+      elevation: 1, 
     },
     imageButton: {
       width: "100%",
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.25,
       shadowRadius: 4,
-      elevation: 3, // Android shadow
+      elevation: 3, 
     },
     buttonText: {
       color: "#fff",

@@ -1,17 +1,19 @@
-import Login from "./Pages/Login";
+import Login from "./Pages/Auth/Login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createStaticNavigation } from "@react-navigation/native";
-import Register from "./Pages/Register";
-import Home from "./Pages/Home";
+import Register from "./Pages/Auth/Register";
+import Home from "./Pages/Home/Home";
+import MatchDetails from "./Pages/Match/MatchDetails";
 
 const RootStack = createNativeStackNavigator({
   screens: {
     Login: Login,
     Home: Home,
     Register: Register,
+    MatchDetails: MatchDetails,
   },
   screenOptions: {
-    headerShown: false,
+    headerShown: true,
   },
 });
 

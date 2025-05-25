@@ -71,7 +71,7 @@ const MatchDetails = () => {
                     </div>
                     <div className="mb-2">
                         <span className="font-semibold">{t("Created By")}:</span>{" "}
-                        {match.user.name}
+                        {match.user?.name}
                     </div>
                     <div className="mb-2">
                         <span className="font-semibold">{t("Players")}:</span>{" "}

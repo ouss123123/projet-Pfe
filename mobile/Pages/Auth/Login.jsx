@@ -8,13 +8,12 @@ import {
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import Config from "react-native-config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
-
 
   const handleLogin = async () => {
     try {
@@ -28,10 +27,13 @@ const Login = () => {
           password,
         }),
       });
-      if(res) navigation.navigate("Home");
 
       const data = await res.json();
       console.log(data);
+      await AsyncStorage.setItem("token", data.data.token);
+      if(data.message === "Login successful"){
+        navigation.navigate("Home")
+      }
     } catch (error) {
       console.error("Fetch error:", error.message);
     }
