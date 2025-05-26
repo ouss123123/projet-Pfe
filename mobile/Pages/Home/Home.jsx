@@ -44,6 +44,10 @@ const Home = () => {
     });
   };
 
+  const handleCreateMatchNavigation = () => {
+    navigation.navigate("createMatch");
+  };
+
   useEffect(() => {
     getToken();
     getMatches();
@@ -52,6 +56,9 @@ const Home = () => {
   return (
     <>
       <SafeAreaView style={styles.container}>
+        <Pressable onPress={handleCreateMatchNavigation} style={styles.createMatchContainer}>
+          <Text style={styles.createMatch}>Create Match</Text>
+        </Pressable>
         <>
           <FlatList
             data={matches}
@@ -76,7 +83,6 @@ const Home = () => {
             )}
           />
         </>
-        <NavBar />
       </SafeAreaView>
     </>
   );
@@ -169,4 +175,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  createMatchContainer : {
+    width : "30%",
+    
+  },
+  createMatch : {
+    backgroundColor: "#1F41BB",
+    width : "100%",
+    borderRadius : 8,
+    color : "#fff",
+    textAlign : "center",
+    padding : 5,
+    marginBottom : 10
+  }
 });

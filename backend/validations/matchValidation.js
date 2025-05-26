@@ -15,17 +15,11 @@ const createGameValidator = [
 
   body("createdBy")
     .notEmpty()
-    .withMessage("createdBy is required")
-    .isMongoId()
-    .withMessage("createdBy must be a valid MongoDB ObjectId"),
-
-  body("players").notEmpty().withMessage("Players is required"),
+    .withMessage("createdBy is required"),
 
   body("maxPlayers")
     .notEmpty()
     .withMessage("maxPlayers is required")
-    .isInt({ min: 1 })
-    .withMessage("maxPlayers must be a positive integer"),
 ];
 
 const searchGameValidator = [
