@@ -45,8 +45,12 @@ const Home = () => {
   };
 
   const handleCreateMatchNavigation = () => {
-    navigation.navigate("createMatch");
+    navigation.navigate("CreateMatch");
   };
+
+  const handleProfileNavigation = () => {
+    navigation.navigate("Profile");
+  }
 
   useEffect(() => {
     getToken();
@@ -58,6 +62,9 @@ const Home = () => {
       <SafeAreaView style={styles.container}>
         <Pressable onPress={handleCreateMatchNavigation} style={styles.createMatchContainer}>
           <Text style={styles.createMatch}>Create Match</Text>
+        </Pressable>
+        <Pressable onPress={handleProfileNavigation} style={styles.createMatchContainer}>
+          <Text style={styles.createMatch}>Visit Profile</Text>
         </Pressable>
         <>
           <FlatList

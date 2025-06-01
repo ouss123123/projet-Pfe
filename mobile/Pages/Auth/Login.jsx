@@ -32,6 +32,8 @@ const Login = () => {
       console.log(data);
       await AsyncStorage.setItem("token", data.data.token);
       await AsyncStorage.setItem("userId", data.data._id);
+      await AsyncStorage.setItem("avatar", data.data.profile_picture);
+      await AsyncStorage.setItem("name", data.data.name);
       if(data.message === "Login successful"){
         navigation.navigate("Home")
       }
