@@ -282,7 +282,7 @@ const MatchDetails = () => {
                                     alt={match.user?.name || "Creator"}
                                     className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
                                 />
-                                <div>
+                                <div> 
                                     <h3 className="font-semibold text-gray-800">Organized by {match.user?.name || "Unknown"}</h3>
                                     <div className="text-sm text-gray-500 flex items-center gap-1">Rating: <span className="text-yellow-500">★ 4.8/5</span></div>
                                 </div>
