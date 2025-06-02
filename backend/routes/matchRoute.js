@@ -48,8 +48,6 @@ router.delete(
 router.delete(
   "/players/:id",
   verifyToken,
-  matchCanceledValidator,
-  validate,
   matchController.playerCanceled
 );
 

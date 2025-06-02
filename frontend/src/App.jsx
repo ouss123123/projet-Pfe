@@ -11,7 +11,8 @@ const CreateMatch = lazy(() => import("./Pages/Matches/CreateMatch"));
 const ResetPassword = lazy(() => import("./Pages/Auth/ResetPassword"));
 const ForgotPassword = lazy(() => import("./Pages/Auth/ForgotPassword"));
 const Profile = lazy(() => import("./Pages/Profile/Profile"));
-const MatchDetails = lazy(() => import("./Pages/Matches/MatchDetails"));
+const MatchDetails = lazy(() => import("./pages/matches/MatchDetails"));
+const Chat = lazy(() => import("./Pages/Chat/Chat"));
 
 function App() {
   const [IsConnected, setIsConnected] = useState(false);
@@ -26,8 +27,9 @@ function App() {
           <Route path="/create-match" element={<CreateMatch setIsConnected={setIsConnected} />} />
           <Route path="/profile" element={<Profile setIsConnected={setIsConnected} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset" element={<ResetPassword/>} />
           <Route path="/matches/:id" element={<MatchDetails />} />
+          <Route path="/reset" element={<ResetPassword/>} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

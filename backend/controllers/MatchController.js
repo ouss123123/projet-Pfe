@@ -44,11 +44,11 @@ const addPlayers = asyncWrapper(async (req, res) => {
     }
   });
 
-  const updatedTeam = await match.save();
-
+  await match.save();
+  const updatedMatch = await matchModel.findById(id).populate("players.user");
   res.json({
     message: "Players added and updated successfully",
-    data: updatedTeam,
+    data: updatedMatch,
   });
 });
 
@@ -92,7 +92,7 @@ const getMatches = asyncWrapper(async (req, res) => {
 
 const getMatchById = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  const match = await matchModel.findById(id);
+  const match = await matchModel.findById(id).populate("players.user");
   const user = await userModel.findById(match.createdBy);
   if (!match) {
     return res.status(404).json({ message: "Match not found" });
