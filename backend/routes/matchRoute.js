@@ -49,8 +49,6 @@ router.delete(
 router.delete(
   "/players/:id",
   verifyToken,
-  playerCanceledValidator,
-  validate,
   matchController.playerCanceled
 );
 

@@ -9,7 +9,7 @@ const createStadium = asyncWrapper(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const stadium = await Stadium.create({
+ const stadium = await Stadium.create({
     name,
     location: { longitude, latitude },
   });
