@@ -57,6 +57,8 @@ const CreateMatch = () => {
                     ...formData,
                     players: [],
                     createdBy: sessionStorage.getItem("userId"),
+                    stadiumLocation: selectedStadium,
+                    Price: formData.price
                 },
                 {
                     headers: {

@@ -1,6 +1,5 @@
 import { lazy, useState } from "react";
 import { Suspense } from "react";
-import Spinner from "./Components/Loading/Spinner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 const Home = lazy(() => import("./Pages/Home/Home"));
 const SignUp = lazy(() => import("./Pages/Auth/SignUp"));
@@ -18,7 +17,7 @@ function App() {
   const [IsConnected, setIsConnected] = useState(false);
   return (
     <BrowserRouter>
-      <Suspense fallback={<Spinner />}>
+      <Suspense >
         <Routes>
           <Route path="/" element={<Home setIsConnected={setIsConnected} />} />
           <Route path="/signup" element={<SignUp/>} />
