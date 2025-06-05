@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavBar from "../../components/Nav";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const Home = () => {
   const [token, setToken] = useState("");
@@ -50,20 +51,29 @@ const Home = () => {
 
   const handleProfileNavigation = () => {
     navigation.navigate("Profile");
-  }
+  };
 
   useEffect(() => {
     getToken();
-    getMatches();
-  }, []);
+  },[]);
+
+  useEffect(() => {
+    if (token) getMatches();
+  }, [token]);
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <Pressable onPress={handleCreateMatchNavigation} style={styles.createMatchContainer}>
+        <Pressable
+          onPress={handleCreateMatchNavigation}
+          style={styles.createMatchContainer}
+        >
           <Text style={styles.createMatch}>Create Match</Text>
         </Pressable>
-        <Pressable onPress={handleProfileNavigation} style={styles.createMatchContainer}>
+        <Pressable
+          onPress={handleProfileNavigation}
+          style={styles.createMatchContainer}
+        >
           <Text style={styles.createMatch}>Visit Profile</Text>
         </Pressable>
         <>
@@ -182,17 +192,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
-  createMatchContainer : {
-    width : "30%",
-    
+  createMatchContainer: {
+    width: "30%",
   },
-  createMatch : {
+  createMatch: {
     backgroundColor: "#1F41BB",
-    width : "100%",
-    borderRadius : 8,
-    color : "#fff",
-    textAlign : "center",
-    padding : 5,
-    marginBottom : 10
-  }
+    width: "100%",
+    borderRadius: 8,
+    color: "#fff",
+    textAlign: "center",
+    padding: 5,
+    marginBottom: 10,
+  },
 });
