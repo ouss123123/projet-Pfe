@@ -44,6 +44,7 @@ io.on("connection", (socket) => {
 
   socket.on("notification",(message) => {
     io.emit("notification", message);
+    console.log('message',message)
   })
 
   socket.on("disconnect", () => {
