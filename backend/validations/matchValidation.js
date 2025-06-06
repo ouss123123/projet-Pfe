@@ -20,11 +20,17 @@ const createGameValidator = [
   body("maxPlayers")
     .notEmpty()
     .withMessage("maxPlayers is required")
+    .isInt({ min: 1 })
+    .withMessage("maxPlayers must be a positive integer"),
+  body("price")
+    .notEmpty()
+    .withMessage("price is required")
+    .isFloat({ min: 0 })
+    .withMessage("price must be a positive number"),
 ];
 
 const searchGameValidator = [
-  query("title").notEmpty().withMessage("title is required"),
-  query("location").notEmpty().withMessage("title is required"),
+  
 ];
 
 const addPlayersValidator = [

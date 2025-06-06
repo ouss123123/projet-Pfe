@@ -6,7 +6,9 @@ const Register = lazy(() => import("./Pages/Auth/Register"));
 const Home = lazy(() => import("./Pages/Home/Home"));
 const MatchDetails = lazy(() => import("./Pages/Match/MatchDetails"));
 const CreateMatch = lazy(() => import("./Pages/Match/CreateMatch"));
-const Profile = lazy(() => import("./Pages/Profile/Profile.jsx"))
+const Profile = lazy(() => import("./Pages/Profile/Profile.jsx"));
+const SearchMatch = lazy(() => import("./Pages/Match/SearchMatch.jsx"));
+
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -16,9 +18,10 @@ const RootStack = createNativeStackNavigator({
     MatchDetails: MatchDetails,
     CreateMatch: CreateMatch,
     Profile: Profile,
+    SearchMatch : SearchMatch
   },
   screenOptions: {
-    headerShown: true,
+    headerShown: false,
   },
 });
 

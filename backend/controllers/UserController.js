@@ -7,6 +7,8 @@ const twilio = require("twilio");
 const crypto = require("crypto");
 const generateJWT = require("../utils/generateJWT.js");
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const uploadFolderPath = path.join(__dirname, "../uploads/usersImages");
 if (!fs.existsSync(uploadFolderPath)) {
@@ -154,7 +156,7 @@ const forgetPassword = asyncWrapper(async (req, res) => {
   await userModel.findByIdAndUpdate(user._id, {
     resetPasswordToken: token,
   });
-  const resetLink = `http://localhost:5173/password/reset?token=${token}`;
+  const resetLink = `${process.env.RESET_LINK}${token}`;
   client.messages
     .create({
       body: resetLink,

@@ -1,20 +1,16 @@
 import {
-  Button,
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
   Text,
   View,
-  ScrollView,
+  StyleSheet,
+  SafeAreaView,
   FlatList,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavBar from "../../components/Nav";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const Home = () => {
   const [token, setToken] = useState("");
@@ -39,7 +35,6 @@ const Home = () => {
   };
 
   const handleMatchDetails = (item) => {
-    console.log(item);
     navigation.navigate("MatchDetails", {
       matchId: item._id,
     });
@@ -55,28 +50,71 @@ const Home = () => {
 
   useEffect(() => {
     getToken();
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if (token) getMatches();
+    if (token) {
+      getMatches();
+    }
   }, [token]);
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <Pressable
-          onPress={handleCreateMatchNavigation}
-          style={styles.createMatchContainer}
-        >
-          <Text style={styles.createMatch}>Create Match</Text>
-        </Pressable>
-        <Pressable
-          onPress={handleProfileNavigation}
-          style={styles.createMatchContainer}
-        >
-          <Text style={styles.createMatch}>Visit Profile</Text>
-        </Pressable>
-        <>
+    <SafeAreaView>
+      <SafeAreaView style={styles}>
+        <NavBar />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.hero}>
+            <Text style={styles.heroTitle}>Welcome to Our Platform</Text>
+            <Text style={styles.heroSubtitle}>
+              Discover amazing features and possibilities
+            </Text>
+            <Pressable style={styles.heroButton}>
+              <Text style={styles.heroButtonText}>Get Started</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.featuresSection}>
+            <Text style={styles.sectionTitle}>Our Features</Text>
+            <View style={styles.featuresContainer}>
+              <View style={styles.featureCard}>
+                <Text style={styles.featureIcon}>🚀</Text>
+                <Text style={styles.featureTitle}>Fast & Efficient</Text>
+                <Text style={styles.featureText}>
+                  Lightning-fast performance for your needs
+                </Text>
+              </View>
+              <View style={styles.featureCard}>
+                <Text style={styles.featureIcon}>🛡️</Text>
+                <Text style={styles.featureTitle}>Secure</Text>
+                <Text style={styles.featureText}>
+                  Your data is safe with us
+                </Text>
+              </View>
+              <View style={styles.featureCard}>
+                <Text style={styles.featureIcon}>👥</Text>
+                <Text style={styles.featureTitle}>Community</Text>
+                <Text style={styles.featureText}>
+                  Join our growing community
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.buttonRow}>
+            <Pressable
+              onPress={handleCreateMatchNavigation}
+              style={styles.createMatchContainer}
+            >
+              <Text style={styles.createMatch}>Create Match</Text>
+            </Pressable>
+            <Pressable
+              onPress={handleProfileNavigation}
+              style={styles.createMatchContainer}
+            >
+              <Text style={styles.createMatch}>Visit Profile</Text>
+            </Pressable>
+          </View>
+
           <FlatList
             data={matches}
             keyExtractor={(item) => item._id}
@@ -99,47 +137,122 @@ const Home = () => {
               </View>
             )}
           />
-        </>
+
+          {/* CTA Section */}
+          <View style={styles.ctaSection}>
+            <Text style={styles.ctaTitle}>Ready to Get Started?</Text>
+            <Text style={styles.ctaSubtitle}>
+              Join thousands of satisfied users today
+            </Text>
+            <Pressable style={styles.ctaButton}>
+              <Text style={styles.ctaButtonText}>Sign Up Now</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       </SafeAreaView>
-    </>
+    </SafeAreaView>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
-    justifyContent: "space-around",
-    padding: 30,
   },
-  image: {
-    width: "100%",
-    height: null,
-    aspectRatio: 1 / 0.9,
+
+  // Hero
+  hero: {
+    alignItems: "center",
   },
-  title: {
-    fontFamily: "Poppins_600SemiBold",
-    fontSize: 35,
-    lineHeight: 42,
+  heroTitle: {
+    fontSize: 30,
+    fontWeight: "bold",
     color: "#1F41BB",
     textAlign: "center",
   },
-  subtitle: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: 15,
-    lineHeight: 24,
+  heroSubtitle: {
+    fontSize: 16,
+    color: "#555",
     textAlign: "center",
-    marginTop: 20,
+    marginVertical: 10,
   },
-  buttons: {
+  heroButton: {
+    backgroundColor: "#1F41BB",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  heroButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
+  // Features
+  featuresSection: {
+    marginVertical: 30,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  featuresContainer: {
     flexDirection: "row",
-    gap: 20,
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: 10,
   },
-  card: {
-    display: "flex",
-    flexDirection: "column",
+  featureCard: {
+    width: "30%",
     alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  featureIcon: {
+    fontSize: 30,
+    marginBottom: 10,
+  },
+  featureTitle: {
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  featureText: {
+    textAlign: "center",
+    fontSize: 12,
+    color: "#666",
+  },
+
+  // Buttons
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  createMatchContainer: {
+    width: "48%",
+  },
+  createMatch: {
+    backgroundColor: "#1F41BB",
+    width: "100%",
+    borderRadius: 8,
+    color: "#fff",
+    textAlign: "center",
+    padding: 10,
+    fontWeight: "bold",
+  },
+
+  // Match Card
+  card: {
     backgroundColor: "#fff",
     borderRadius: 16,
     padding: 20,
@@ -175,33 +288,47 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 4,
   },
-  canceled: {
-    color: "red",
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 8,
-  },
   matchDetails: {
     marginTop: 5,
   },
   cardButton: {
     backgroundColor: "#1F41BB",
     color: "#fff",
-    padding: 5,
+    padding: 8,
     borderRadius: 8,
     textAlign: "center",
     fontWeight: "bold",
   },
-  createMatchContainer: {
-    width: "30%",
+
+  // CTA
+  ctaSection: {
+    marginTop: 40,
+    alignItems: "center",
+    backgroundColor: "#1a1a1a",
+    padding: 20,
+    borderRadius: 12,
   },
-  createMatch: {
-    backgroundColor: "#1F41BB",
-    width: "100%",
-    borderRadius: 8,
+  ctaTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
     color: "#fff",
-    textAlign: "center",
-    padding: 5,
     marginBottom: 10,
+    textAlign: "center",
+  },
+  ctaSubtitle: {
+    fontSize: 14,
+    color: "#ccc",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  ctaButton: {
+    backgroundColor: "#4F46E5",
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+  },
+  ctaButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

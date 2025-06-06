@@ -18,6 +18,10 @@ const matchSchema = new mongoose.Schema(
       },
     ],
     isCanceled: { type: Boolean, default: false },
+    stadiumLocation: {
+      lat: { type: Number },
+      lng: { type: Number }
+    },
   },
   {
     timestamps: true,

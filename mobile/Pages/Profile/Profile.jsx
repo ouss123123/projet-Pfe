@@ -60,7 +60,6 @@ const Profile = () => {
     Pic = `${process.env.IP4V}/${profilePic?.slice(10)}`;
   }
 
-  console.log(form);
   
 
   const updateUserData = async () => {
@@ -85,6 +84,7 @@ const Profile = () => {
   useEffect(() => {
     getData();
   }, []);
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoContainer}>

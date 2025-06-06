@@ -86,7 +86,7 @@ const Navbar = () => {
       </ul>
       <div className="flex items-center space-x-4">
         <Link
-          to="/sign-up"
+          to="/signup"
           className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition-all"
         >
           {t("Sign Up")}

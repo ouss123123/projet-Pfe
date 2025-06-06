@@ -21,9 +21,15 @@ const NavBar = () => {
       </Pressable>
       <Pressable
         style={styles.pressable}
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("SearchMatch")}
       >
         <Text style={styles.link}>Home</Text>
+      </Pressable>
+      <Pressable
+        style={styles.pressable}
+        onPress={() => navigation.navigate("SearchMatch")}
+      >
+        <Text style={styles.link}>SearchMatch</Text>
       </Pressable>
     </View>
   );
@@ -35,7 +41,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2233a3",
     paddingVertical: 18,
-    paddingHorizontal: 12,
     borderTopLeftRadius: 22,
     borderTopRightRadius: 22,
     shadowColor: "#1F41BB",
@@ -43,9 +48,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 12,
-    marginBottom: 0,
+    marginBottom: 10,
     borderTopWidth: 1,
     borderColor: "#2e3bbd",
+    marginTop: 100,
   },
   link: {
     color: "#fff",

@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import Navbar from "../../components/Nav";
 
 const MatchDetails = () => {
@@ -32,8 +32,13 @@ const MatchDetails = () => {
 
   useEffect(() => {
     getToken();
-    getMatchDetails();
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      getMatchDetails();
+    }
+  }, [token]);
 
   return (
     <View style={styles.card}>
@@ -45,9 +50,7 @@ const MatchDetails = () => {
       <Text style={styles.players}>
         👥 {match?.players.length} / {match?.maxPlayers} players
       </Text>
-      {match?.isCanceled && (
-        <Text style={styles.canceled}>Canceled</Text>
-      )}
+      {match?.isCanceled && <Text style={styles.canceled}>Canceled</Text>}
     </View>
   );
 };

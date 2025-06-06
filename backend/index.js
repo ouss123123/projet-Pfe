@@ -11,7 +11,11 @@ const matchRoutes = require("./routes/matchRoute.js");
 const stadiumRoutes = require("./routes/stadiumRoute.js");
 const commentRoutes = require("./routes/commentRoute.js");
 const messageRoutes = require("./routes/messageRoutes.js");
+const notificationRoutes = require("./routes/notificationRoutes.js");
+const reportRoutes = require("./routes/reportRoutes.js")
 const limiter = require("./middlewares/limiter.js");
+const dotenv = require("dotenv");
+dotenv.config()
 
 EventEmitter.defaultMaxListeners = 20;
 
@@ -38,6 +42,10 @@ io.on("connection", (socket) => {
     io.emit("chat message", message);
   });
 
+  socket.on("notification",(message) => {
+    io.emit("notification", message);
+  })
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
@@ -53,6 +61,8 @@ try {
   app.use("/stadiums", stadiumRoutes);
   app.use("/comments", commentRoutes);
   app.use("/messages",messageRoutes);
+  app.use("/notifications",notificationRoutes)
+  app.use("/reports",reportRoutes)
   app.use((err, req, res, next) => {
     res.status(500).json({
       message: err.message,

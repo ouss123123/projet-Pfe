@@ -21,6 +21,7 @@ const CreateMatch = () => {
   const [maxPlayers, setMaxPlayers] = useState("");
   const [token, setToken] = useState("");
   const [stadiums, setStadiums] = useState([]);
+  const [price, setPrice] = useState([]);
 
   const getUserId = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -42,7 +43,7 @@ const CreateMatch = () => {
   };
 
   const handleSubmit = async () => {
-    await fetch(`${process.env.IP4V}/matches`, {
+    const res = await fetch(`${process.env.IP4V}/matches`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,6 +52,7 @@ const CreateMatch = () => {
       body: JSON.stringify({
         title,
         location,
+        price,
         date,
         time,
         maxPlayers: maxPlayers,
@@ -58,12 +60,16 @@ const CreateMatch = () => {
         players: [],
       }),
     });
+    const data = await res.json();
+    console.log(data);
   };
-
   useEffect(() => {
     getUserId();
-    fetchStadiums();
   }, []);
+  useEffect(() => {
+    if (token) fetchStadiums();
+  }, [token]);
+  console.log(location);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,11 +110,21 @@ const CreateMatch = () => {
           placeholder="HH:MM"
         />
         <Text style={styles.label}>Max Players</Text>
+
         <TextInput
           style={styles.input}
           value={maxPlayers}
           onChangeText={setMaxPlayers}
           placeholder="Max Players"
+          keyboardType="numeric"
+        />
+        <Text style={styles.label}>Price</Text>
+
+        <TextInput
+          style={styles.input}
+          value={price}
+          onChangeText={setPrice}
+          placeholder="Price"
           keyboardType="numeric"
         />
 
