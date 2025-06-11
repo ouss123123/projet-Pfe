@@ -21,7 +21,7 @@ const RootStack = createNativeStackNavigator({
     SearchMatch : SearchMatch
   },
   screenOptions: {
-    headerShown: false,
+    headerShown: true,
   },
 });
 

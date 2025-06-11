@@ -1,6 +1,7 @@
 const matchModel = require("../models/Match");
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
 const userModel = require("../models/User.js");
+const stadiumModel = require("../models/Stadium");
 
 const createMatch = asyncWrapper(async (req, res) => {
   const {
@@ -108,10 +109,17 @@ const getMatchById = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const match = await matchModel.findById(id).populate("players.user");
   const user = await userModel.findById(match.createdBy);
+  const stadium = await stadiumModel.findOne({ name: match.location });
   if (!match) {
     return res.status(404).json({ message: "Match not found" });
   }
-  res.status(200).json({ message: "success", data: match, user: user });
+  return res.status(200).json({
+    message: "success",
+    data: match,
+    user: user,
+    stadium: stadium
+      
+  });
 });
 
 const matchCanceled = asyncWrapper(async (req, res) => {

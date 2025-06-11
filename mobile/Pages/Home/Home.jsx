@@ -10,7 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NavBar from "../../components/Nav";
+import NavBar from "../../components/Navbar/Nav";
 
 const Home = () => {
   const [token, setToken] = useState("");
@@ -59,9 +59,12 @@ const Home = () => {
   }, [token]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        position: "relative",
+      }}
+    >
       <SafeAreaView style={styles}>
-        <NavBar />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
             <Text style={styles.heroTitle}>Welcome to Our Platform</Text>
@@ -140,16 +143,18 @@ const Home = () => {
 
           {/* CTA Section */}
           <View style={styles.ctaSection}>
-            <Text style={styles.ctaTitle}>Ready to Get Started?</Text>
-            <Text style={styles.ctaSubtitle}>
-              Join thousands of satisfied users today
-            </Text>
-            <Pressable style={styles.ctaButton}>
-              <Text style={styles.ctaButtonText}>Sign Up Now</Text>
-            </Pressable>
+            
           </View>
         </ScrollView>
       </SafeAreaView>
+      <View style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+      }}>
+        <NavBar />
+      </View>
     </SafeAreaView>
   );
 };
@@ -157,7 +162,6 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  
   container: {
     flex: 1,
   },
@@ -302,11 +306,9 @@ const styles = StyleSheet.create({
 
   // CTA
   ctaSection: {
-    marginTop: 40,
+    marginTop: 30,
+    marginBottom: 20,
     alignItems: "center",
-    backgroundColor: "#1a1a1a",
-    padding: 20,
-    borderRadius: 12,
   },
   ctaTitle: {
     fontSize: 24,
