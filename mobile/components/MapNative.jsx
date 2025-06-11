@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions } from "react-native";
 import { WebView } from "react-native-webview";
 
 export default function Map({ longitude, latitude }) {
-// ...existing code...
+
 const mapHtml = `
   <!DOCTYPE html>
   <html>
@@ -41,7 +41,6 @@ const mapHtml = `
   </html>
 `;
 
-  // Responsive height for the map
   const { width } = Dimensions.get("window");
   const mapHeight = Math.round(width * 0.7);
 
