@@ -58,7 +58,7 @@ const UserNav = () => {
                     {[
                         { path: "/dashboard", label: t("Home") },
                         { path: "/create-match", label: t("Create match") },
-                        { path: "/services", label: "Services" },
+                        { path: "/matches", label: "Matches" },
                         { path: "/contact", label: "Contact" }
                     ].map((link) => (
                         <div

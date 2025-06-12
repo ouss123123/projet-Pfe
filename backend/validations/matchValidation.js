@@ -30,8 +30,6 @@ const createGameValidator = [
 ];
 
 const searchGameValidator = [
-  query("title").notEmpty().withMessage("title is required"),
-  query("location").notEmpty().withMessage("title is required"),
 ];
 
 const addPlayersValidator = [

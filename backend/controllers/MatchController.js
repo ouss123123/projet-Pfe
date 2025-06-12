@@ -3,8 +3,17 @@ const asyncWrapper = require("../middlewares/asyncWrapper.js");
 const userModel = require("../models/User.js");
 
 const createMatch = asyncWrapper(async (req, res) => {
-  const { title, location, date, time, players, createdBy, maxPlayers, Price, stadiumLocation } =
-    req.body;
+  const {
+    title,
+    location,
+    date,
+    time,
+    players,
+    createdBy,
+    maxPlayers,
+    Price,
+    stadiumLocation,
+  } = req.body;
   const newMatch = new matchModel({
     title,
     location,
@@ -55,10 +64,14 @@ const addPlayers = asyncWrapper(async (req, res) => {
 
 const searchMatch = asyncWrapper(async (req, res) => {
   const { title, location } = req.query;
-  const matches = await matchModel.find({
-    title: { $regex: title, $options: "i" },
-    location: { $regex: location, $options: "i" },
-  });
+  const query = {};
+  if (title) {
+    query.title = { $regex: title, $options: "i" };
+  }
+  if (location) {
+    query.location = { $regex: location, $options: "i" };
+  }
+  const matches = await matchModel.find(query);
   return res.status(200).json({
     message: "founded",
     data: matches,

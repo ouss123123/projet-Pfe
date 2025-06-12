@@ -7,13 +7,14 @@ import axiosInstance from "../../axios/axiosInstance";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 
-const CreateMatch = () => {
+const CreateMatch = React.memo(() => {
     const [formData, setFormData] = useState({
         title: "",
         location: "",
         date: "",
         time: "",
         maxPlayers: "",
+        price: "",
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -58,7 +59,6 @@ const CreateMatch = () => {
                     players: [],
                     createdBy: sessionStorage.getItem("userId"),
                     stadiumLocation: selectedStadium,
-                    Price: formData.price
                 },
                 {
                     headers: {
@@ -218,6 +218,6 @@ const CreateMatch = () => {
             </div>
         </>
     );
-};
+});
 
 export default CreateMatch;

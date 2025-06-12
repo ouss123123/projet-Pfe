@@ -100,7 +100,7 @@ const Profile = () => {
         <Text style={styles.label}>Name</Text>
         <TextInput
           style={styles.input}
-          placeholder="Match Title"
+          placeholder="Enter your name"
           onChangeText={(name) => setForm({ ...form, name: name })}
         />
         <TouchableOpacity onPress={selectImage} style={styles.imageButton}>
@@ -109,13 +109,14 @@ const Profile = () => {
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="YYYY-MM-DD"
+          placeholder="Enter your email"
           onChangeText={(email) => setForm({ ...form, email: email })}
         />
         <Text style={styles.label}>Phone</Text>
         <TextInput
           style={styles.input}
-          placeholder="HH:MM"
+          placeholder="Enter your phone number"
+          keyboardType="phone-pad"
           onChangeText={(phone) => setForm({ ...form, phone: phone })}
         />
 
