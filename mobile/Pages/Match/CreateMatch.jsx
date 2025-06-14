@@ -6,10 +6,13 @@ import {
   Pressable,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import { lazy } from "react";
+const Navbar = lazy(() => import("../../components/Navbar/Nav.jsx"));
 
 const CreateMatch = () => {
   const navigation = useNavigation();
@@ -73,64 +76,69 @@ const CreateMatch = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Create Match</Text>
-      <View style={styles.form}>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Match Title"
-        />
-        <Text style={styles.label}>Location</Text>
-        <Picker
-          selectedValue={location}
-          onValueChange={(itemValue) => setLocation(itemValue)}
-        >
-          {stadiums?.map((stadium) => (
-            <Picker.Item
-              key={stadium._id}
-              label={stadium.name}
-              value={stadium.name}
-            />
-          ))}
-        </Picker>
-        <Text style={styles.label}>Date</Text>
-        <TextInput
-          style={styles.input}
-          value={date}
-          onChangeText={setDate}
-          placeholder="YYYY-MM-DD"
-        />
-        <Text style={styles.label}>Time</Text>
-        <TextInput
-          style={styles.input}
-          value={time}
-          onChangeText={setTime}
-          placeholder="HH:MM"
-        />
-        <Text style={styles.label}>Max Players</Text>
+      <ScrollView style={{padding : 24}}>
+        <Text style={styles.header}>Create Match</Text>
+        <View style={styles.form}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Match Title"
+          />
+          <Text style={styles.label}>Location</Text>
+          <Picker
+            selectedValue={location}
+            onValueChange={(itemValue) => setLocation(itemValue)}
+          >
+            {stadiums?.map((stadium) => (
+              <Picker.Item
+                key={stadium._id}
+                label={stadium.name}
+                value={stadium.name}
+              />
+            ))}
+          </Picker>
+          <Text style={styles.label}>Date</Text>
+          <TextInput
+            style={styles.input}
+            value={date}
+            onChangeText={setDate}
+            placeholder="YYYY-MM-DD"
+          />
+          <Text style={styles.label}>Time</Text>
+          <TextInput
+            style={styles.input}
+            value={time}
+            onChangeText={setTime}
+            placeholder="HH:MM"
+          />
+          <Text style={styles.label}>Max Players</Text>
 
-        <TextInput
-          style={styles.input}
-          value={maxPlayers}
-          onChangeText={setMaxPlayers}
-          placeholder="Max Players"
-          keyboardType="numeric"
-        />
-        <Text style={styles.label}>Price</Text>
+          <TextInput
+            style={styles.input}
+            value={maxPlayers}
+            onChangeText={setMaxPlayers}
+            placeholder="Max Players"
+            keyboardType="numeric"
+          />
+          <Text style={styles.label}>Price</Text>
 
-        <TextInput
-          style={styles.input}
-          value={price}
-          onChangeText={setPrice}
-          placeholder="Price"
-          keyboardType="numeric"
-        />
+          <TextInput
+            style={styles.input}
+            value={price}
+            onChangeText={setPrice}
+            placeholder="Price"
+            keyboardType="numeric"
+          />
 
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Create</Text>
-        </Pressable>
+          <Pressable style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Create</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+      <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <Navbar />
       </View>
     </SafeAreaView>
   );
@@ -140,15 +148,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f6fa",
-    padding: 24,
     justifyContent: "center",
+    position: "relative",
   },
   header: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#1F41BB",
     textAlign: "center",
-    marginBottom: 24,
+    marginBottom: 10,
   },
   form: {
     backgroundColor: "#fff",

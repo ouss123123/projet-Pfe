@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -8,7 +9,6 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavBar from "../../components/Navbar/Nav";
 
@@ -23,29 +23,19 @@ const Home = () => {
   };
 
   const getMatches = async () => {
-    const res = await fetch(`${process.env.IP4V}/matches?limit=10&page=1`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    setMatches(data.data);
-  };
-
-  const handleMatchDetails = (item) => {
-    navigation.navigate("MatchDetails", {
-      matchId: item._id,
-    });
-  };
-
-  const handleCreateMatchNavigation = () => {
-    navigation.navigate("CreateMatch");
-  };
-
-  const handleProfileNavigation = () => {
-    navigation.navigate("Profile");
+    try {
+      const res = await fetch(`${process.env.IP4V}/matches?limit=10&page=1`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setMatches(data.data || []);
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+    }
   };
 
   useEffect(() => {
@@ -58,101 +48,57 @@ const Home = () => {
     }
   }, [token]);
 
+  const handleMatchDetails = (item) => {
+    navigation.navigate("MatchDetails", { matchId: item._id });
+  };
+
+  const handleCreateMatchNavigation = () => {
+    navigation.navigate("CreateMatch");
+  };
+
+  const handleProfileNavigation = () => {
+    navigation.navigate("Profile");
+  };
+
   return (
-    <SafeAreaView
-      style={{
-        position: "relative",
-      }}
-    >
-      <SafeAreaView style={styles}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.hero}>
-            <Text style={styles.heroTitle}>Welcome to Our Platform</Text>
-            <Text style={styles.heroSubtitle}>
-              Discover amazing features and possibilities
-            </Text>
-            <Pressable style={styles.heroButton}>
-              <Text style={styles.heroButtonText}>Get Started</Text>
-            </Pressable>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        <View style={styles.hero}>
+          <Text style={styles.heroTitle}>Welcome to Our Platform</Text>
+          <Text style={styles.heroSubtitle}>
+            Discover amazing features and possibilities
+          </Text>
+        </View>
 
-          <View style={styles.featuresSection}>
-            <Text style={styles.sectionTitle}>Our Features</Text>
-            <View style={styles.featuresContainer}>
-              <View style={styles.featureCard}>
-                <Text style={styles.featureIcon}>🚀</Text>
-                <Text style={styles.featureTitle}>Fast & Efficient</Text>
-                <Text style={styles.featureText}>
-                  Lightning-fast performance for your needs
-                </Text>
-              </View>
-              <View style={styles.featureCard}>
-                <Text style={styles.featureIcon}>🛡️</Text>
-                <Text style={styles.featureTitle}>Secure</Text>
-                <Text style={styles.featureText}>
-                  Your data is safe with us
-                </Text>
-              </View>
-              <View style={styles.featureCard}>
-                <Text style={styles.featureIcon}>👥</Text>
-                <Text style={styles.featureTitle}>Community</Text>
-                <Text style={styles.featureText}>
-                  Join our growing community
-                </Text>
-              </View>
+        <FlatList
+          data={matches}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardLocation}>📍 {item.location}</Text>
+              <Text style={styles.cardDate}>
+                🗓️ {new Date(item.date).toLocaleDateString()} at {item.time}
+              </Text>
+              <Text style={styles.cardPlayers}>
+                👥 {item.players.length} / {item.maxPlayers} players
+              </Text>
+              <Pressable
+                onPress={() => handleMatchDetails(item)}
+                style={styles.matchDetails}
+              >
+                <Text style={styles.cardButton}>View Details</Text>
+              </Pressable>
             </View>
-          </View>
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      </ScrollView>
 
-          <View style={styles.buttonRow}>
-            <Pressable
-              onPress={handleCreateMatchNavigation}
-              style={styles.createMatchContainer}
-            >
-              <Text style={styles.createMatch}>Create Match</Text>
-            </Pressable>
-            <Pressable
-              onPress={handleProfileNavigation}
-              style={styles.createMatchContainer}
-            >
-              <Text style={styles.createMatch}>Visit Profile</Text>
-            </Pressable>
-          </View>
-
-          <FlatList
-            data={matches}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardLocation}>📍 {item.location}</Text>
-                <Text style={styles.cardDate}>
-                  🗓️ {new Date(item.date).toLocaleDateString()} at {item.time}
-                </Text>
-                <Text style={styles.cardPlayers}>
-                  👥 {item.players.length} / {item.maxPlayers} players
-                </Text>
-                <Pressable
-                  onPress={() => handleMatchDetails(item)}
-                  style={styles.matchDetails}
-                >
-                  <Text style={styles.cardButton}>View Details</Text>
-                </Pressable>
-              </View>
-            )}
-          />
-
-          {/* CTA Section */}
-          <View style={styles.ctaSection}>
-            
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-      <View style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}>
+      <View style={styles.navBarWrapper}>
         <NavBar />
       </View>
     </SafeAreaView>
@@ -164,173 +110,123 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f7fa",
   },
-
-  // Hero
   hero: {
     alignItems: "center",
+    paddingHorizontal: 25,
+    marginTop: 30,
+    marginBottom: 25,
   },
   heroTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
+    fontSize: 32,
+    fontWeight: "700",
     color: "#1F41BB",
     textAlign: "center",
+    marginBottom: 8,
   },
   heroSubtitle: {
-    fontSize: 16,
-    color: "#555",
+    fontSize: 18,
+    color: "#4a4a4a",
     textAlign: "center",
-    marginVertical: 10,
+    marginBottom: 15,
   },
   heroButton: {
     backgroundColor: "#1F41BB",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    shadowColor: "#1F41BB",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   heroButtonText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: "700",
+    fontSize: 16,
   },
-
-  // Features
-  featuresSection: {
-    marginVertical: 30,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  featuresContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-  featureCard: {
-    width: "30%",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  featureIcon: {
-    fontSize: 30,
-    marginBottom: 10,
-  },
-  featureTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
-    textAlign: "center",
-  },
-  featureText: {
-    textAlign: "center",
-    fontSize: 12,
-    color: "#666",
-  },
-
-  // Buttons
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
+    justifyContent: "space-around",
+    marginHorizontal: 25,
+    marginBottom: 25,
   },
-  createMatchContainer: {
-    width: "48%",
-  },
-  createMatch: {
+  actionButton: {
+    flex: 1,
     backgroundColor: "#1F41BB",
-    width: "100%",
-    borderRadius: 8,
-    color: "#fff",
-    textAlign: "center",
-    padding: 10,
-    fontWeight: "bold",
+    borderRadius: 10,
+    paddingVertical: 14,
+    marginHorizontal: 8,
+    alignItems: "center",
+    shadowColor: "#1F41BB",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
-
-  // Match Card
+  actionButtonText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 16,
+  },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 20,
-    marginBottom: 20,
+    marginHorizontal: 25,
+    marginBottom: 18,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 6,
+    elevation: 4,
   },
   cardTitle: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#1F41BB",
     marginBottom: 8,
     textAlign: "center",
   },
   cardLocation: {
     fontSize: 16,
-    color: "#555",
-    marginBottom: 4,
+    color: "#666",
+    marginBottom: 6,
     textAlign: "center",
   },
   cardDate: {
-    fontSize: 15,
-    color: "#333",
-    marginBottom: 4,
+    fontSize: 16,
+    color: "#444",
+    marginBottom: 6,
     textAlign: "center",
   },
   cardPlayers: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#1F41BB",
+    marginBottom: 12,
     textAlign: "center",
-    marginBottom: 4,
   },
   matchDetails: {
-    marginTop: 5,
+    alignItems: "center",
   },
   cardButton: {
     backgroundColor: "#1F41BB",
     color: "#fff",
-    padding: 8,
-    borderRadius: 8,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-
-  // CTA
-  ctaSection: {
-    marginTop: 30,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  ctaTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  ctaSubtitle: {
-    fontSize: 14,
-    color: "#ccc",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  ctaButton: {
-    backgroundColor: "#4F46E5",
     paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 8,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    fontWeight: "700",
+    textAlign: "center",
   },
-  ctaButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+  navBarWrapper: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+    backgroundColor: "#fff",
   },
 });

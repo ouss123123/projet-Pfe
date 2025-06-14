@@ -10,9 +10,16 @@ import {
   FlatList,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import * as FileSystem from "expo-file-system";
+import * as IntentLauncher from "expo-intent-launcher";
+import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
+import * as DocumentPicker from "expo-document-picker";
+import { StorageAccessFramework } from "expo-file-system";
+import { Platform, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import Map from "../../components/MapNative";
+const Map = lazy(() => import("../../components/Map/MapNative.jsx"));
 const Navbar = lazy(() => import("../../components/Navbar/Nav"));
 
 const MatchDetails = () => {
@@ -26,6 +33,7 @@ const MatchDetails = () => {
     longitude: 0,
     latitude: 0,
   });
+  const [joined, setJoined] = useState(false);
   const route = useRoute();
   const { matchId } = route.params;
   const navigation = useNavigation();
@@ -49,7 +57,54 @@ const MatchDetails = () => {
     setMatch(data.data);
     setLocation(data.stadium.location);
   };
-  console.log(location);
+
+  const saveTicketToDownloads = async (match) => {
+    if (Platform.OS !== "android") {
+      alert("Only supported on Android.");
+      return;
+    }
+
+    try {
+      const permissions =
+        await StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (!permissions.granted) {
+        alert("Permission not granted.");
+        return;
+      }
+
+      const ticketContent = `
+        🏟️ Match Ticket
+        -----------------------
+        Title: ${match.title}
+        Location: ${match.location}
+        Date: ${match.date} at ${match.time}
+        Players: ${match.players.length} / ${match.maxPlayers}
+        Price: ${match.price}
+        `;
+
+      const fileName = "match_ticket.txt";
+      const fileUri = permissions.directoryUri;
+
+      await StorageAccessFramework.createFileAsync(
+        fileUri,
+        fileName,
+        "text/plain"
+      )
+        .then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, ticketContent, {
+            encoding: FileSystem.EncodingType.UTF8,
+          });
+          alert("Ticket saved to Downloads!");
+        })
+        .catch((err) => {
+          console.error("File creation failed:", err);
+          alert("Could not create ticket file.");
+        });
+    } catch (err) {
+      console.error("Error saving ticket:", err);
+      alert("Something went wrong while saving the ticket.");
+    }
+  };
 
   const getComments = async () => {
     const res = await fetch(
@@ -68,6 +123,7 @@ const MatchDetails = () => {
 
   const handleJoinMatch = async () => {
     try {
+      setJoined(true);
       const res = await fetch(`${process.env.IP4V}/matches/${matchId}`, {
         method: "PATCH",
         headers: {
@@ -128,6 +184,10 @@ const MatchDetails = () => {
     }
   };
 
+  const handleProfileUser = (id) => {
+    navigation.navigate("UserProfile", { userId: id });
+  };
+
   useEffect(() => {
     getToken();
   }, []);
@@ -169,6 +229,37 @@ const MatchDetails = () => {
           </Text>
           {match?.isCanceled && <Text style={styles.canceled}>Canceled</Text>}
         </View>
+        <View style={styles.container}>
+          <View style={styles.playerSection}>
+            {match ? (
+              match?.players?.map((player) => {
+                <Text style={styles.commentTitle}>Players</Text>;
+                const user = player.user;
+                return (
+                  <>
+                    {user && (
+                      <View key={player._id} style={styles.playerCard}>
+                        <Text style={styles.playerName}>{user.name}</Text>
+                        <Text style={styles.playerEmail}>📧 {user.email}</Text>
+                        <Text style={styles.playerStats}>
+                          Matches: {user.stats.matchesPlayed} | MVPs:{" "}
+                          {user.stats.mvpCount}
+                        </Text>
+                        <Pressable onPress={() => handleProfileUser(user._id)}>
+                          <Text>Visit User profile</Text>
+                        </Pressable>
+                      </View>
+                    )}
+                  </>
+                );
+              })
+            ) : (
+              <View style={styles.emptyPlayersContainer}>
+                <Text style={styles.emptyPlayers}>No players</Text>
+              </View>
+            )}
+          </View>
+        </View>
         <View style={styles.commentSection}>
           <Text style={styles.commentTitle}>Comments</Text>
           <FlatList
@@ -205,6 +296,12 @@ const MatchDetails = () => {
               <Text style={styles.buttonText}>Leave Match</Text>
             </Pressable>
           </View>
+          <Pressable
+            style={[styles.button, { backgroundColor: "#28a745" }]}
+            onPress={() => saveTicketToDownloads(match)}
+          >
+            <Text style={styles.buttonText}>Download Ticket (TXT)</Text>
+          </Pressable>
         </View>
         <Map longitude={location?.longitude} latitude={location?.latitude} />
       </ScrollView>
@@ -358,6 +455,64 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e11d48",
     marginLeft: 5,
+  },
+  playerSection: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: "#1F41BB",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  playerCard: {
+    backgroundColor: "#f0f4ff",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  playerName: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "#1F41BB",
+  },
+  playerEmail: {
+    fontSize: 14,
+    color: "#333",
+  },
+  playerStats: {
+    fontSize: 13,
+    color: "#666",
+  },
+  playerStatsValue: {
+    fontWeight: "bold",
+    color: "#1F41BB",
+  },
+  emptyPlayersContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 20,
+  },
+  emptyPlayers: {
+    color: "#888",
+    fontSize: 16,
+    fontStyle: "italic",
+    textAlign: "center",
+  },
+  mapContainer: {
+    width: "100%",
+    height: 200,
+    marginTop: 20,
+    borderRadius: 16,
+    overflow: "hidden",
+    shadowColor: "#1F41BB",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+const Navbar = lazy(() => import("../../components/Navbar/Nav.jsx"));
 
 const SearchMatch = () => {
   const [title, setTitle] = useState("");
@@ -62,49 +63,52 @@ const SearchMatch = () => {
       <Text style={styles.cardPlayers}>
         👥 {item.players.length} / {item.maxPlayers} players
       </Text>
-      {item.isCanceled && (
-        <Text style={styles.canceled}>Canceled</Text>
-      )}
+      {item.isCanceled && <Text style={styles.canceled}>Canceled</Text>}
     </Pressable>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Search Match</Text>
-      <View style={styles.form}>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Enter match title"
-          placeholderTextColor="#aaa"
+      <View style={{ padding: 24 }}>
+        <Text style={styles.header}>Search Match</Text>
+        <View style={styles.form}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Enter match title"
+            placeholderTextColor="#aaa"
+          />
+          <Text style={styles.label}>Location</Text>
+          <TextInput
+            style={styles.input}
+            value={location}
+            onChangeText={setLocation}
+            placeholder="Enter location"
+            placeholderTextColor="#aaa"
+          />
+          <Pressable style={styles.button} onPress={handleSearch}>
+            <Text style={styles.buttonText}>
+              {searching ? "Searching..." : "Search"}
+            </Text>
+          </Pressable>
+        </View>
+        <FlatList
+          data={matches}
+          keyExtractor={(item) => item._id}
+          renderItem={renderMatch}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={
+            !searching && (
+              <Text style={styles.emptyText}>No matches found.</Text>
+            )
+          }
         />
-        <Text style={styles.label}>Location</Text>
-        <TextInput
-          style={styles.input}
-          value={location}
-          onChangeText={setLocation}
-          placeholder="Enter location"
-          placeholderTextColor="#aaa"
-        />
-        <Pressable style={styles.button} onPress={handleSearch}>
-          <Text style={styles.buttonText}>
-            {searching ? "Searching..." : "Search"}
-          </Text>
-        </Pressable>
       </View>
-      <FlatList
-        data={matches}
-        keyExtractor={(item) => item._id}
-        renderItem={renderMatch}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          !searching && (
-            <Text style={styles.emptyText}>No matches found.</Text>
-          )
-        }
-      />
+      <View style={{position : "absolute", bottom : 0,width : "100%"}}>
+        <Navbar />
+      </View>
     </SafeAreaView>
   );
 };
@@ -113,8 +117,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f6fa",
-    padding: 24,
-    marginTop : 10
+    marginTop: 10,
+    position: "relative",
   },
   header: {
     fontSize: 28,
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     shadowColor: "#1F41BB",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
   },

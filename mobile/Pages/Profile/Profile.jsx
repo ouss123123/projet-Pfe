@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
+const Navbar = lazy(() => import("../../components/Navbar/Nav.jsx"));
 
 const Profile = () => {
   const [token, setToken] = useState("");
@@ -60,8 +61,6 @@ const Profile = () => {
     Pic = `${process.env.IP4V}/${profilePic?.slice(10)}`;
   }
 
-  
-
   const updateUserData = async () => {
     const res = await fetch(`${process.env.IP4V}/users/${userId}`, {
       method: "PATCH",
@@ -70,7 +69,7 @@ const Profile = () => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        name : form.name,
+        name: form.name,
         email: form.email,
         phone: form.phone,
         avatar: avatarBase64,
@@ -78,60 +77,63 @@ const Profile = () => {
     });
     const data = res.json();
     console.log(data);
-    
   };
 
   useEffect(() => {
     getData();
   }, []);
-  
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.userInfoContainer}>
-        <Text style={styles.userInfoText}>{name}</Text>
-        <Image
-          style={styles.userInfoImage}
-          source={{
-            uri: Pic,
-          }}
-        />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Match Title"
-          onChangeText={(name) => setForm({ ...form, name: name })}
-        />
-        <TouchableOpacity onPress={selectImage} style={styles.imageButton}>
-          <Text style={styles.buttonText}>Upload Image</Text>
-        </TouchableOpacity>
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="YYYY-MM-DD"
-          onChangeText={(email) => setForm({ ...form, email: email })}
-        />
-        <Text style={styles.label}>Phone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="HH:MM"
-          onChangeText={(phone) => setForm({ ...form, phone: phone })}
-        />
 
-        <Pressable style={styles.button} onPress={updateUserData}>
-          <Text style={styles.buttonText}>Update</Text>
-        </Pressable>
+  return (
+    <View style={styles.container}>
+      <View style={{ padding: 24 }}>
+        <View style={styles.userInfoContainer}>
+          <Text style={styles.userInfoText}>{name}</Text>
+          <Image
+            style={styles.userInfoImage}
+            source={{
+              uri: Pic,
+            }}
+          />
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Match Title"
+            onChangeText={(name) => setForm({ ...form, name: name })}
+          />
+          <TouchableOpacity onPress={selectImage} style={styles.imageButton}>
+            <Text style={styles.buttonText}>Upload Image</Text>
+          </TouchableOpacity>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="YYYY-MM-DD"
+            onChangeText={(email) => setForm({ ...form, email: email })}
+          />
+          <Text style={styles.label}>Phone</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="HH:MM"
+            onChangeText={(phone) => setForm({ ...form, phone: phone })}
+          />
+
+          <Pressable style={styles.button} onPress={updateUserData}>
+            <Text style={styles.buttonText}>Update</Text>
+          </Pressable>
+        </View>
       </View>
-    </SafeAreaView>
+      <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <Navbar />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    marginTop : 100
+    position : "relative"
   },
   userInfoImage: {
     width: 70,
