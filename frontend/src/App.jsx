@@ -1,7 +1,6 @@
 import { lazy, useState } from "react";
 import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-const Home = lazy(() => import("./Pages/Home/Home"));
 const SignUp = lazy(() => import("./Pages/Auth/SignUp"));
 const Login = lazy(() => import("./Pages/Auth/Login"));
 const NotFound = lazy(() => import("./Pages/NotFound/NotFound"));
@@ -21,7 +20,6 @@ function App() {
     <BrowserRouter>
       <Suspense >
         <Routes>
-          <Route path="/" element={<Home setIsConnected={setIsConnected} />} />
           <Route path="/signup" element={<SignUp/>} />
           <Route path="/login" element={<Login  setIsConnected={setIsConnected}/>} />
           <Route path="/home" element={<Dashboard  setIsConnected={setIsConnected}/>}/>

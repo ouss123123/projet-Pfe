@@ -58,7 +58,7 @@ const CreateMatch = React.memo(() => {
                     ...formData,
                     players: [],
                     createdBy: sessionStorage.getItem("userId"),
-                    // stadiumLocation: selectedStadium,
+                    stadiumLocation: selectedStadium,
                 },
                 {
                     headers: {

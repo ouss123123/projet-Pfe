@@ -12,7 +12,7 @@ const createMatch = asyncWrapper(async (req, res) => {
     players,
     createdBy,
     maxPlayers,
-    Price,
+    price,
     stadiumLocation,
   } = req.body;
   const newMatch = new matchModel({
@@ -23,7 +23,7 @@ const createMatch = asyncWrapper(async (req, res) => {
     players,
     createdBy,
     maxPlayers,
-    Price,
+    price,
     stadiumLocation,
   });
   await newMatch.save();

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import Map from "../../Components/Map/Map";
+import { saveAs } from "file-saver";
 
 const MatchDetails = React.memo(() => {
     const { id } = useParams();
@@ -108,7 +109,7 @@ const MatchDetails = React.memo(() => {
             </div>
         );
     }
-
+    console.log(match.data);
     const match_id = match.data._id;
     const handleCancelMatch = async () => {
         if (window.confirm(t("Are you sure you want to cancel this match?"))) {
