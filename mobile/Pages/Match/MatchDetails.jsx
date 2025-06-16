@@ -516,4 +516,11 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
+
+
+// MatchDetails component to display match information, comments, and player details
+
 export default MatchDetails;

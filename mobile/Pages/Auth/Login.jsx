@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { lazy } from "react";
+// const AsyncStorage = lazy(() => import("@react-native-async-storage/async-storage"));
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -143,5 +144,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+
+// Login component for user authentication
 
 export default Login;
