@@ -654,9 +654,7 @@ const MatchDetails = React.memo(() => {
                             </div>
                         </Card>
                     </div>
-                  ))}
                 </div>
-              </Card>
             </div>
         </div>
     );
