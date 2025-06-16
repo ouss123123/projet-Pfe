@@ -49,13 +49,17 @@ const SignUp = () => {
     <div
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0e7ff] to-[#f3e8ff]"
       style={{
+        background: `linear-gradient(to bottom right, #e0e7ff, #f3e8ff)`,
         backgroundImage: `url(${soccerbg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        minHeight: "100vh",
+        transition: "background-image 0.3s ease"
       }}
     >
-      <div className="w-[480px] bg-white/90 rounded-3xl shadow-2xl border border-gray-200 p-12 flex flex-col items-center">
+      <div className="w-full max-w-md bg-white/90 rounded-3xl shadow-2xl border border-gray-200 p-8 sm:p-12 flex flex-col items-center backdrop-blur-md">
         <div className="mb-8 flex flex-col items-center">
+          <FontAwesomeIcon icon={faFutbol} className="text-4xl text-indigo-700 mb-2" />
           <h1 className="text-4xl font-extrabold text-indigo-700 mb-1 tracking-tight">
             {t("Create Account")}
           </h1>

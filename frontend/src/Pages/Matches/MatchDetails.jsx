@@ -18,6 +18,8 @@ const MatchDetails = React.memo(() => {
     const [comments, setComments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState(false);
+    const [editCommentId, setEditCommentId] = useState(null);
+    const [editCommentText, setEditCommentText] = useState("");
     const token = sessionStorage.getItem("token");
 
     useEffect(() => {
@@ -120,8 +122,7 @@ const MatchDetails = React.memo(() => {
                     }
                 );
                 console.log(response.data);
-                alert(t("Match cancelled successfully"));
-                navigate("/dashboard");
+                navigate("/home");
             } catch (err) {
                 alert(t("Failed to cancel match"));
             }
@@ -193,12 +194,95 @@ const MatchDetails = React.memo(() => {
             alert(t("Failed to add comment"));
         }
     };
+    const deleteComment = async (commentId) => {
+        try {
+            const token = sessionStorage.getItem("token");
+            await axiosInstance.delete(`/comments/${commentId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            // Refresh comments after deletion
+            const res = await axiosInstance.get(`/comments/${id}?limit=10`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setComments(res.data.data);
+        } catch (err) {
+            alert(t("Failed to delete comment"));
+        }
+    };
+    const editComment = async (commentId, updatedComment) => {
+        try {
+            const token = sessionStorage.getItem("token");
+            await axiosInstance.patch(
+                `/comments/${commentId}`,
+                { comment: updatedComment },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            // Refresh comments after editing
+            const res = await axiosInstance.get(`/comments/${id}?limit=10`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setComments(res.data.data);
+        } catch (err) {
+            alert(t("Failed to edit comment"));
+        }
+    };
+
 
     const isCreator = (playerId) => {
         if (!match?.data?.createdBy) return false;
         return playerId === (match.data.createdBy._id || match.data.createdBy);
     };
-    console.log(match.data);
+    
+    const downloadTicket = () => {
+        if (!match?.data) return;
+        const dateStr = new Date(match.data.date).toLocaleDateString();
+        const timeStr = match.data.time;
+        const players = (match.data.players || []).map((player, idx) =>
+            `<tr><td style='padding:4px 8px;border:1px solid #eee;'>${idx + 1}</td><td style='padding:4px 8px;border:1px solid #eee;'>${player.user?.name || 'Unknown'}</td></tr>`
+        ).join("");
+        const html = `
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Match Ticket</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7fafc; color: #222; }
+    .ticket { max-width: 400px; margin: 40px auto; border-radius: 16px; border: 2px dashed #4f46e5; background: #fff; box-shadow: 0 2px 8px #0001; padding: 32px; }
+    .ticket h2 { color: #4f46e5; margin-bottom: 8px; }
+    .ticket table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .ticket th, .ticket td { text-align: left; }
+    .ticket .label { color: #6b7280; font-size: 0.95em; }
+    .ticket .value { font-weight: bold; }
+    .ticket .players-title { margin-top: 18px; color: #4f46e5; }
+    .ticket .footer { margin-top: 24px; font-size: 0.9em; color: #888; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class='ticket'>
+    <h2>Match Ticket</h2>
+    <div><span class='label'>Title:</span> <span class='value'>${match.data.title}</span></div>
+    <div><span class='label'>Location:</span> <span class='value'>${match.data.location}</span></div>
+    <div><span class='label'>Date:</span> <span class='value'>${dateStr}</span></div>
+    <div><span class='label'>Time:</span> <span class='value'>${timeStr}</span></div>
+    <div><span class='label'>Organizer:</span> <span class='value'>${match.user?.name || 'Unknown'}</span></div>
+    <div><span class='label'>Max Players:</span> <span class='value'>${match.data.maxPlayers}</span></div>
+    <div><span class='label'>Price:</span> <span class='value'>${typeof match.data.price !== 'undefined' && match.data.price !== '' ? match.data.price : 'Free'}</span></div>
+    <div class='players-title'><b>Players List</b></div>
+    <table>
+      <tr><th>#</th><th>Name</th></tr>
+      ${players}
+    </table>
+    <div class='footer'>Please present this ticket at the stadium entrance.<br/>Generated on ${new Date().toLocaleString()}</div>
+  </div>
+</body>
+</html>
+`;
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        saveAs(blob, `${match.data.title || 'match'}-ticket.html`);
+    };
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 mt-18">
             <UserNav />
@@ -318,9 +402,6 @@ const MatchDetails = React.memo(() => {
                                     <h3 className="font-semibold text-gray-800">
                                         Organized by {match.user?.name || "Unknown"}
                                     </h3>
-                                    <div className="text-sm text-gray-500 flex items-center gap-1">
-                                        Rating: <span className="text-yellow-500">★ 4.8/5</span>
-                                    </div>
                                 </div>
                             </div>
                             {/* Stadium Map */}
@@ -341,6 +422,27 @@ const MatchDetails = React.memo(() => {
                                     />
                                 </div>
                             </div>
+                            {/* Download Ticket Button */}
+                            <Button
+                                onClick={downloadTicket}
+                                className="max-w-xs mb-4 flex items-center gap-2"
+                                variant="outline"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 12 12"
+                                    width="1em"
+                                    height="1em"
+                                >
+                                    <path
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        d="M1.5 11.5h9m-8-6l3.1 3.1c.2.2.5.2.7 0l3.1-3.1M6 8.5v-8"
+                                    ></path>
+                                </svg>
+                                {t("Download Ticket")}
+                            </Button>
                         </Card>
                         {/* Comments Card */}
                         <Card className="w-full p-6">
@@ -366,20 +468,71 @@ const MatchDetails = React.memo(() => {
                                             className="w-9 h-9 rounded-full object-cover border-2 border-blue-300 shadow-md"
                                         />
                                         <div className="flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-semibold text-gray-800 text-sm">
-                                                    {comment.createdBy?.name || comment.createdBy}
-                                                </span>
-                                                <span className="text-xs text-gray-500">
-                                                    {new Date(comment.createdAt).toLocaleString([], {
-                                                        dateStyle: "short",
-                                                        timeStyle: "short",
-                                                    })}
-                                                </span>
+                                            <div className="flex items-center gap-2 justify-between w-full">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <span className="font-semibold text-gray-800 text-sm truncate">
+                                                        {comment.createdBy?.name || comment.createdBy}
+                                                    </span>
+                                                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                                                        {new Date(comment.createdAt).toLocaleString([], {
+                                                            dateStyle: "short",
+                                                            timeStyle: "short",
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                {sessionStorage.getItem("userId") === comment.createdBy?._id && (
+                                                    <div className="flex items-center gap-2 ml-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditCommentId(comment._id);
+                                                                setEditCommentText(comment.comment);
+                                                            }}
+                                                            className="text-xl flex gap-1"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                                                                <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" />
+                                                            </svg>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => deleteComment(comment._id)}
+                                                            className="text-xl flex gap-1"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                                                                <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <p className="text-gray-700 text-sm mt-1">
-                                                {comment.comment}
-                                            </p>
+                                            {editCommentId === comment._id ? (
+                                                <form
+                                                    onSubmit={async (e) => {
+                                                        e.preventDefault();
+                                                        await editComment(comment._id, editCommentText);
+                                                        setEditCommentId(null);
+                                                        setEditCommentText("");
+                                                    }}
+                                                    className="flex items-end gap-2 mt-2"
+                                                >
+                                                    <textarea
+                                                        value={editCommentText}
+                                                        onChange={e => setEditCommentText(e.target.value)}
+                                                        className="flex-1 p-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+                                                        rows="1"
+                                                        autoFocus
+                                                    />
+                                                    <Button type="submit" className="px-4 py-2 text-xs" variant="primary">
+                                                        Save
+                                                    </Button>
+                                                    <Button type="button" className="px-4 py-2 text-xs" variant="secondary" onClick={() => { setEditCommentId(null); setEditCommentText(""); }}>
+                                                        Cancel
+                                                    </Button>
+                                                </form>
+                                            ) : (
+                                                <p className="text-gray-700 text-sm mt-1">
+                                                    {comment.comment}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -467,16 +620,35 @@ const MatchDetails = React.memo(() => {
                                             alt={player.user?.name || "Player"}
                                             className="w-8 h-8 rounded-full border-2 border-blue-300 object-cover"
                                         />
-                                        <div className="flex-1">
-                                            <div className="font-medium text-gray-800 text-sm">
+                                        <div className="flex-1 flex items-center gap-2">
+                                            <span className="font-medium text-gray-800 text-sm">
                                                 {player.user?.name || "Unknown"}
-                                            </div>
-                                        </div>
-                                        {isCreator(player.user || player._id || player) && (
-                                            <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full font-semibold">
-                                                Organizer
                                             </span>
-                                        )}
+                                            {player.user._id !== sessionStorage.getItem("userId") && (
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24"
+                                                    width="1.5em"
+                                                    height="1.5em"
+                                                    className="cursor-pointer hover:text-blue-600 transition"
+                                                    onClick={() => navigate('/chat', { state: { userId: player.user._id, userName: player.user.name } })}
+                                                >
+                                                    <path
+                                                        fill="currentColor"
+                                                        fillRule="evenodd"
+                                                        d="M3 5.983C3 4.888 3.895 4 5 4h14c1.105 0 2 .888 2 1.983v8.923a1.99 1.99 0 0 1-2 1.983h-6.6l-2.867 2.7c-.955.899-2.533.228-2.533-1.08v-1.62H5c-1.105 0-2-.888-2-1.983zm5.706 3.809a1 1 0 1 0-1.412 1.417a1 1 0 1 0 1.412-1.417m2.585.002a1 1 0 1 1 .003 1.414a1 1 0 0 1-.003-1.414m5.415-.002a1 1 0 1 0-1.412 1.417a1 1 0 1 0 1.412-1.417"
+                                                        clipRule="evenodd"
+                                                    ></path>
+                                                </svg>
+                                            )}
+                                        </div>
+                                        {isCreator(
+                                            player.user?._id || player._id || player
+                                        ) && (
+                                                <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full font-semibold">
+                                                    Organizer
+                                                </span>
+                                            )}
                                     </div>
                                 ))}
                             </div>

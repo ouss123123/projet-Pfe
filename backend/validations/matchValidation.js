@@ -49,8 +49,6 @@ const playerCanceledValidator = [
 ];
 
 const getMatchesValidator = [
-  query("limit").notEmpty().withMessage("limit is necessary"),
-  query("page").notEmpty().withMessage("page is necessary"),
 ];
 
 const filterMatchValidator = [

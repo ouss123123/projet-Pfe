@@ -23,7 +23,7 @@ const UserNav = () => {
     const handleLogout = () => {
         sessionStorage.clear();
         localStorage.clear();
-        navigate("/");
+        navigate("/login");
     };
 
     const handleLanguage = (e) => {
@@ -48,7 +48,7 @@ const UserNav = () => {
                         icon={faFutbol}
                         className="text-2xl"
                     />
-                    <Link to="/dashboard" className="text-2xl font-bold hover:text-blue-100 transition-colors">
+                    <Link to="/home" className="text-2xl font-bold hover:text-blue-100 transition-colors">
                         MatchUp
                     </Link>
                 </div>
@@ -56,10 +56,10 @@ const UserNav = () => {
                 {/* Navigation Links */}
                 <div className="hidden md:flex items-center space-x-8">
                     {[
-                        { path: "/dashboard", label: t("Home") },
+                        { path: "/home", label: t("Home") },
                         { path: "/create-match", label: t("Create match") },
                         { path: "/matches", label: "Matches" },
-                        { path: "/contact", label: "Contact" }
+                        { path: "/about", label: "About" }
                     ].map((link) => (
                         <div
                             key={link.path}

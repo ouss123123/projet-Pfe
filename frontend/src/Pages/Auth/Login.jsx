@@ -35,7 +35,7 @@ const Login = ({ setIsConnected }) => {
         sessionStorage.setItem("userId", res.data.data._id);
         setIsConnected(true);
 
-        navigate("/dashboard");
+        navigate("/home");
       } catch (err) {
         console.error("Login failed:", err);
         setError(true);
@@ -48,6 +48,8 @@ const Login = ({ setIsConnected }) => {
         backgroundImage: `url(${soccerBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        minHeight: "100vh",
+        transition: "background-image 0.3s ease"
       }}
     >
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

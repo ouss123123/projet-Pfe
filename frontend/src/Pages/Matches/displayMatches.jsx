@@ -13,11 +13,11 @@ const DisplayMatches = () => {
     const [title, setTitle] = useState("");
     const [location, setLocation] = useState("");
     const [totalPages, setTotalPages] = useState(1);
-    const navigate = useNavigate();
     const token = sessionStorage.getItem("token");
+    const navigate = useNavigate();
     const [search, setSearch] = useState(false);
     const [searchMatch, setSearchMatch] = useState([]);
-    
+
     useEffect(() => {
         if (!token) {
             navigate("/login");
@@ -25,11 +25,10 @@ const DisplayMatches = () => {
         }
         const getMatches = async () => {
             try {
-                const response = await axiosInstance.get(`/matches?limit=10&page=${page}`, {
+                const response = await axiosInstance.get(`/matches`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                setMatches(response.data);
-                setTotalPages(Math.ceil(response.data.total / 10) || 1);
+                setMatches({ ...response.data, data: response.data.data });
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching matches:", error);
@@ -46,49 +45,37 @@ const DisplayMatches = () => {
             </div>
         );
     }
-    
-    // if (!matches.data || matches.data.length === 0) {
-    //     return (
-    //         <div className="min-h-screen flex items-center justify-center">
-    //             <Card className="p-8 text-center">
-    //                 <h2 className="text-2xl font-bold text-gray-700 mb-2">No matches found</h2>
-    //                 <p className="text-gray-500">Check back later for new matches!</p>
-    //             </Card>
-    //         </div>
-    //     );
-    // }
-    
-    const handleSearch = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/matches/search?title=${title}&location=${location}`,
-          { headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } }
+
+    if (!matches.data || matches.data.length === 0) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Card className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-gray-700 mb-2">No matches found</h2>
+                    <p className="text-gray-500">Check back later for new matches!</p>
+                </Card>
+            </div>
         );
-        setMatches({ data: res.data.data || [] });
-        setSearchMatch(res.data.data || []);
-        
-        console.log(searchMatch);
+    }
+
+    const realTotalPages = matches && matches.total && matches.total > 0 ? Math.ceil(matches.total / 9) : 1;
+
+    const handleSearch = async () => {
+        try {
+            setLoading(true);
+            const res = await axiosInstance.get(
+                `/matches/search?title=${title}&location=${location}`,
+                { headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } }
+            );
+            setMatches({ data: res.data.data || [] });
+            setSearchMatch(res.data.data || []);
+            setTotalPages(1); // Only 1 page for search results
+            setLoading(false);
         } catch (err) {
+            setLoading(false);
             console.error("Search error:", err);
         }
     };
-    const handleFilter = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.post(
-          "/matches/filter",
-          {
-            data: { date: search, location: search }, 
-            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } 
-          }
-        );
-        setMatches(res.data.data || []);
-      } catch (err) {
-        setMatches([]);
-      }
-      setLoading(false);
-    };
-    // Remove grouping by date, just show cards
+
     const matchesToDisplay = searchMatch.length > 0 ? searchMatch : (matches.data || []);
     return (
         <div className="container mx-auto px-4 py-8 mt-24">
@@ -112,20 +99,18 @@ const DisplayMatches = () => {
                         className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg transition-all duration-200"
                         onClick={handleSearch}
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6h18M3 12h18M3 18h18" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            height="1em"
+                        >
+                            <g fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <path strokeLinecap="round" d="m20 20l-3-3"></path>
+                            </g>
                         </svg>
                         Search
-                    </button>
-                    <button
-                        className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg transition-all duration-200"
-                        onClick={handleFilter}
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <circle cx="11" cy="11" r="8" />
-                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        Filter
                     </button>
                 </div>
             </div>
@@ -187,7 +172,7 @@ const DisplayMatches = () => {
                                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
-                                        {match.type || "Football"}
+                                        {match?.createdBy?.name || "Football"}
                                     </div>
                                 </div>
                                 <Button
@@ -205,26 +190,6 @@ const DisplayMatches = () => {
                         <p className="text-gray-500">Check back later for new matches!</p>
                     </Card>
                 )}
-            </div>
-            {/* Pagination */}
-            <div className="flex justify-center items-center gap-4 mt-8 mb-12">
-                <Button
-                    variant="outline"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                >
-                    Previous
-                </Button>
-                <span className="text-gray-600 font-medium">
-                    Page {page} of {totalPages}
-                </span>
-                <Button
-                    variant="outline"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                >
-                    Next
-                </Button>
             </div>
         </div>
     );
