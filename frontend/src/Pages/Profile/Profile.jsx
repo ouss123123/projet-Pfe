@@ -8,7 +8,11 @@ import Button from "../../components/ui/Button";
 
 const Profile = () => {
     const { t } = useTranslation();
+    const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
+    React.useEffect(() => {
+        if (!token) navigate("/login");
+    }, [token, navigate]);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -22,7 +26,6 @@ const Profile = () => {
     const [data, setData] = useState(null);
     
     const userId = sessionStorage.getItem("userId") || null;
-    const token = sessionStorage.getItem("token");
     
     if (!token) {
         navigate("/login");

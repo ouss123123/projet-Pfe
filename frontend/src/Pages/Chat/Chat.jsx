@@ -8,8 +8,8 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({});
   const { id: e } = useParams();
-  const token = sessionStorage.getItem("jwt_token");
-  const sender_id = localStorage.getItem("user_chat");
+  const token = sessionStorage.getItem("token");
+  const sender = sessionStorage.getItem("userId");
 
   const getUserById = () => {
     axiosInstance
@@ -28,8 +28,8 @@ function Chat() {
   const getMessages = () => {
     axiosInstance
       .post(
-        "/getMessages",
-        { userIds: [sender_id, e] },
+        "/messages/get",
+        { userIds: [sender, e] },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -47,8 +47,8 @@ function Chat() {
       s.preventDefault();
       axiosInstance
         .post(
-          "/messages",
-          { sender: sender_id, receiver: e, message },
+          "/messages/send",
+          { sender: sender, receiver: e, message },
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then(() => {
