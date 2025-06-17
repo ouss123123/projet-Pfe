@@ -211,4 +211,9 @@ const styles = StyleSheet.create({
   });
   
 
+
+
+
+
+// Register component for user registration
 export default Register;
