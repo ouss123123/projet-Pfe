@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
-  TextInput,
+  TextInput, 
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
@@ -141,5 +141,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+ 
+
+
+// Login component for user authentication
+
 
 export default Login;
